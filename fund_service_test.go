@@ -513,6 +513,38 @@ func TestGetFundIPOs(t *testing.T) {
 	}
 }
 
+func TestGetFactsheetDividendPolicy(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v2/fund/factsheet/dividend-policy" {
+			t.Errorf("unexpected path: %s", r.URL.Path)
+		}
+		q := r.URL.Query()
+		if q.Get("proj_id") != "M0000_2552" {
+			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
+		}
+		if q.Get("latest") != "true" {
+			t.Errorf("expected latest=true, got %q", q.Get("latest"))
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"main","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","dividend_policy":"N","last_upd_date":"2022-07-26T07:53:25Z"}]}`))
+	}))
+	defer server.Close()
+
+	c, _ := NewClient("key", WithBaseURL(server.URL))
+	ctx := context.Background()
+
+	policies, _, err := c.GetFactsheetDividendPolicy(ctx, FactsheetOptions{ProjID: "M0000_2552", Latest: true})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(policies) != 1 {
+		t.Fatalf("expected 1 dividend policy, got %d", len(policies))
+	}
+	if policies[0].DividendPolicy != "N" {
+		t.Errorf("unexpected dividend_policy: %s", policies[0].DividendPolicy)
+	}
+}
+
 func TestServiceEndpointError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)

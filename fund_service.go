@@ -208,6 +208,11 @@ func (c *Client) GetFactsheetStatistics(ctx context.Context, opts FactsheetOptio
 	return fetchPaginated[FactsheetStatistics](ctx, c, path, "get factsheet statistics")
 }
 
+func (c *Client) GetFactsheetDividendPolicy(ctx context.Context, opts FactsheetOptions) ([]FundDividendPolicy, string, error) {
+	path := "/v2/fund/factsheet/dividend-policy" + buildFactsheetQuery(opts)
+	return fetchPaginated[FundDividendPolicy](ctx, c, path, "get factsheet dividend policy")
+}
+
 func (c *Client) GetFactsheetBenchmarks(ctx context.Context, opts FactsheetOptions) ([]FactsheetBenchmark, string, error) {
 	path := "/v2/fund/factsheet/benchmarks" + buildFactsheetQuery(opts)
 	return fetchPaginated[FactsheetBenchmark](ctx, c, path, "get factsheet benchmarks")

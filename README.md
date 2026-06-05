@@ -97,6 +97,7 @@ client, err := sec.NewClient(
 - `GetFactsheetSubscriptionRedemptionMinimums` — `/v2/fund/factsheet/subscription-redemption-minimums`
 - `GetFactsheetSubscriptionRedemptionPeriods` — `/v2/fund/factsheet/subscription-redemption-periods`
 - `GetFactsheetStatistics` — `/v2/fund/factsheet/statistics`
+- `GetFactsheetDividendPolicy` — `/v2/fund/factsheet/dividend-policy`
 - `GetFactsheetBenchmarks` — `/v2/fund/factsheet/benchmarks`
 - `GetFundFactsheetURLs` — `/v2/fund/factsheet/urls`
 - `GetFundIPOs` — `/v2/fund/factsheet/ipos`

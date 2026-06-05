@@ -431,6 +431,35 @@ GET /v2/fund/factsheet/statistics
 
 ---
 
+### 13. Fund Dividend Policy
+```
+GET /v2/fund/factsheet/dividend-policy
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| fund_class_name | string | Fund class |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| dividend_policy | string | Dividend payment policy |
+| last_upd_date | datetime | Last update timestamp |
+
+---
+
 ### 15. Historical Fund Performance
 ```
 GET /v2/fund/factsheet/performance

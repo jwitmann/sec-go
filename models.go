@@ -214,6 +214,16 @@ type FactsheetSubscriptionRedemptionPeriod struct {
 	LastUpdDate      time.Time `json:"last_upd_date"`
 }
 
+type FundDividendPolicy struct {
+	ProjID         string    `json:"proj_id"`
+	FundClassName  string    `json:"fund_class_name"`
+	StartDate      string    `json:"start_date"`
+	EndDate        string    `json:"end_date"`
+	ProspectusType string    `json:"prospectus_type"`
+	DividendPolicy string    `json:"dividend_policy"`
+	LastUpdDate    time.Time `json:"last_upd_date"`
+}
+
 type FundSpecification struct {
 	ProjID        string    `json:"proj_id"`
 	FundClassName string    `json:"fund_class_name"`
