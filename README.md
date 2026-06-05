@@ -11,6 +11,17 @@ Go client library for the Thailand SEC OpenAPI V2 (`api.sec.or.th`).
 go get github.com/jwitmann/sec-go
 ```
 
+## Getting API Keys
+
+1. Go to the [Thailand SEC Open Data portal](https://api-portal.sec.or.th/)
+2. Sign up for a free developer account
+3. Navigate to **Products** → **Open Data APIs** and subscribe
+4. Go to **Applications** → create a new application (or use the default)
+5. In your application, click **Subscription** to add the Open Data API product
+6. Go to your **Profile** → **Keys** to view your **Primary key** and **Secondary key**
+
+Both keys have the same quota. The secondary key is useful as a fallback if you hit rate limits on the primary key.
+
 ## Quick Start
 
 ```go
