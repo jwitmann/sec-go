@@ -9,18 +9,57 @@ import (
 	"time"
 )
 
+func newTestServer(t *testing.T, handler http.HandlerFunc) (*httptest.Server, context.Context) {
+	t.Helper()
+	server := httptest.NewServer(handler)
+	t.Cleanup(server.Close)
+	return server, context.Background()
+}
+
+func newTestClient(t *testing.T, handler http.HandlerFunc) (*Client, context.Context) {
+	t.Helper()
+	server, ctx := newTestServer(t, handler)
+	c, err := NewClient("key", WithBaseURL(server.URL))
+	if err != nil {
+		t.Fatalf("failed to create client: %v", err)
+	}
+	return c, ctx
+}
+
+func newFactsheetServer(t *testing.T, path, projID string, latest bool, body string) (*Client, context.Context) {
+	t.Helper()
+	expected := map[string]string{"proj_id": projID}
+	if latest {
+		expected["latest"] = "true"
+	}
+	return newQueryServer(t, path, expected, body)
+}
+
+func newQueryServer(t *testing.T, path string, expected map[string]string, body string) (*Client, context.Context) {
+	t.Helper()
+	return newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != path {
+			t.Errorf("unexpected path: %s", r.URL.Path)
+		}
+		q := r.URL.Query()
+		for k, v := range expected {
+			if q.Get(k) != v {
+				t.Errorf("unexpected %s: %q", k, q.Get(k))
+			}
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(body))
+	})
+}
+
 func TestListAMCs(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/general-info/amcs" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","page_size":10,"next_cursor":"","items":[{"unique_id":"C0000000021","comp_name_th":"บลจ. กรุงศรี","comp_name_en":"Krungthai Asset Management","last_upd_date":"2024-01-15T00:00:00Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	amcs, cursor, err := c.ListAMCs(ctx, 10, "")
 	if err != nil {
@@ -38,7 +77,7 @@ func TestListAMCs(t *testing.T) {
 }
 
 func TestListAMCsWithPagination(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		if q.Get("page_size") != "5" {
 			t.Errorf("expected page_size=5, got %q", q.Get("page_size"))
@@ -48,11 +87,7 @@ func TestListAMCsWithPagination(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","page_size":5,"next_cursor":"def","items":[]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	_, cursor, err := c.ListAMCs(ctx, 5, "abc")
 	if err != nil {
@@ -64,7 +99,7 @@ func TestListAMCsWithPagination(t *testing.T) {
 }
 
 func TestGetFundProfiles(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/general-info/profiles" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
@@ -74,11 +109,7 @@ func TestGetFundProfiles(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","page_size":10,"items":[{"proj_id":"PRINCIPALi9","proj_name_th":"พรินซิเพิล แอ็กทีฟ อินคัม","proj_name_en":"Principal Active Income","fund_status":"RG"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	profiles, _, err := c.GetFundProfiles(ctx, ProfileOptions{CompanyInfo: "C0000000021"})
 	if err != nil {
@@ -93,7 +124,7 @@ func TestGetFundProfiles(t *testing.T) {
 }
 
 func TestGetFundsByCompanyName(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/general-info/profiles" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
@@ -103,11 +134,7 @@ func TestGetFundsByCompanyName(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","page_size":10,"items":[{"proj_id":"KT-Alpha","proj_name_th":"กรุงศรี อัลฟ่า","proj_name_en":"Krungthai Alpha","fund_status":"RG"},{"proj_id":"KT-Beta","proj_name_th":"กรุงศรี เบต้า","proj_name_en":"Krungthai Beta","fund_status":"RG"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	profiles, _, err := c.GetFundProfiles(ctx, ProfileOptions{CompanyInfo: "Krungthai Asset Management"})
 	if err != nil {
@@ -128,7 +155,7 @@ func TestGetFundsByCompanyName(t *testing.T) {
 }
 
 func TestGetDailyNAV(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/daily-info/nav" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
@@ -144,11 +171,7 @@ func TestGetDailyNAV(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","nav_date":"2024-01-02","last_val":10.5,"net_asset":1000000.0}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	navs, _, err := c.GetDailyNAV(ctx, NAVOptions{
 		ProjID:    "PRINCIPALi9",
@@ -167,17 +190,13 @@ func TestGetDailyNAV(t *testing.T) {
 }
 
 func TestGetMutualFundFees(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/general-info/mutual-fund-fees" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","fee_type_desc":"Management Fee","rate":1.5}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	fees, _, err := c.GetMutualFundFees(ctx, FeeOptions{ProjID: "PRINCIPALi9"})
 	if err != nil {
@@ -189,24 +208,8 @@ func TestGetMutualFundFees(t *testing.T) {
 }
 
 func TestGetFactsheetFees(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/fees" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "PRINCIPALi9" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("latest") != "true" {
-			t.Errorf("expected latest=true, got %q", q.Get("latest"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","fee_type_desc":"Management Fee","rate":1.5}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/fees", "PRINCIPALi9", true,
+		`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","fee_type_desc":"Management Fee","rate":1.5}]}`)
 
 	fees, _, err := c.GetFactsheetFees(ctx, FactsheetOptions{ProjID: "PRINCIPALi9", Latest: true})
 	if err != nil {
@@ -218,7 +221,7 @@ func TestGetFactsheetFees(t *testing.T) {
 }
 
 func TestGetDividendHistory(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/daily-info/dividend-history" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
@@ -228,11 +231,7 @@ func TestGetDividendHistory(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","dividend_value":0.5}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	dividends, _, err := c.GetDividendHistory(ctx, DividendHistoryOptions{ClassAbbrName: "PRINCIPAL-A"})
 	if err != nil {
@@ -244,17 +243,8 @@ func TestGetDividendHistory(t *testing.T) {
 }
 
 func TestGetAssetAllocation(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/asset-allocation" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","asset_name":"Equity","asset_ratio":60.0}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/asset-allocation", "PRINCIPALi9", true,
+		`{"message":"ok","items":[{"proj_id":"PRINCIPALi9","asset_name":"Equity","asset_ratio":60.0}]}`)
 
 	allocations, _, err := c.GetAssetAllocation(ctx, FactsheetOptions{ProjID: "PRINCIPALi9", Latest: true})
 	if err != nil {
@@ -266,24 +256,8 @@ func TestGetAssetAllocation(t *testing.T) {
 }
 
 func TestGetFactsheetSubscriptionRedemptionMinimums(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/subscription-redemption-minimums" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0000_2552" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("latest") != "true" {
-			t.Errorf("expected latest=true, got %q", q.Get("latest"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"main","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","minimum_sub_ipo":5000,"minimum_sub_ipo_cur":"THB","minimum_sub":100,"minimum_sub_cur":"THB","minimum_sub_unit":"","minimum_redempt":0,"minimum_redempt_cur":"THB","minimum_redempt_unit":"","lowbal_val":0,"lowbal_val_cur":"THB","lowbal_unit":"","last_upd_date":"2022-07-26T07:53:25Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/subscription-redemption-minimums", "M0000_2552", true,
+		`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"main","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","minimum_sub_ipo":5000,"minimum_sub_ipo_cur":"THB","minimum_sub":100,"minimum_sub_cur":"THB","minimum_sub_unit":"","minimum_redempt":0,"minimum_redempt_cur":"THB","minimum_redempt_unit":"","lowbal_val":0,"lowbal_val_cur":"THB","lowbal_unit":"","last_upd_date":"2022-07-26T07:53:25Z"}]}`)
 
 	minimums, _, err := c.GetFactsheetSubscriptionRedemptionMinimums(ctx, FactsheetOptions{ProjID: "M0000_2552", Latest: true})
 	if err != nil {
@@ -304,24 +278,9 @@ func TestGetFactsheetSubscriptionRedemptionMinimums(t *testing.T) {
 }
 
 func TestGetFactsheetSubscriptionRedemptionPeriods(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/subscription-redemption-periods" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0512_2564" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("fund_class_name") != "AIA-ICA" {
-			t.Errorf("unexpected fund_class_name: %q", q.Get("fund_class_name"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0512_2564","fund_class_name":"AIA-ICA","start_date":"2023-01-31","end_date":"2023-02-27","prospectus_type":"Monthly","type":"subscription","period":"ทุกวันทำการ","redemp_period_oth":"","settlement_period":"","last_upd_date":"2023-02-27T03:14:20Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newQueryServer(t, "/v2/fund/factsheet/subscription-redemption-periods",
+		map[string]string{"proj_id": "M0512_2564", "fund_class_name": "AIA-ICA"},
+		`{"message":"ok","items":[{"proj_id":"M0512_2564","fund_class_name":"AIA-ICA","start_date":"2023-01-31","end_date":"2023-02-27","prospectus_type":"Monthly","type":"subscription","period":"ทุกวันทำการ","redemp_period_oth":"","settlement_period":"","last_upd_date":"2023-02-27T03:14:20Z"}]}`)
 
 	periods, _, err := c.GetFactsheetSubscriptionRedemptionPeriods(ctx, FactsheetOptions{ProjID: "M0512_2564", FundClassName: "AIA-ICA"})
 	if err != nil {
@@ -342,21 +301,8 @@ func TestGetFactsheetSubscriptionRedemptionPeriods(t *testing.T) {
 }
 
 func TestGetFactsheetStatistics(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/statistics" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0027_2541" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0027_2541","fund_class_name":"ABCC","start_date":"2023-07-31","end_date":"2023-08-30","prospectus_type":"Monthly","portfolio_turnover_ratio":"24.63","recovering_period":"1 เดือน","portfolio_duration_period":"1 เดือน 13 วัน","maximum_drawdown":"-0.02","sharpe_ratio":"0","beta":"0","alpha":"0","fx_hedging":"0","tracking_error":"0","yield_to_maturity":"2026-01-05","last_upd_date":"2023-08-28T11:15:36Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/statistics", "M0027_2541", false,
+		`{"message":"ok","items":[{"proj_id":"M0027_2541","fund_class_name":"ABCC","start_date":"2023-07-31","end_date":"2023-08-30","prospectus_type":"Monthly","portfolio_turnover_ratio":"24.63","recovering_period":"1 เดือน","portfolio_duration_period":"1 เดือน 13 วัน","maximum_drawdown":"-0.02","sharpe_ratio":"0","beta":"0","alpha":"0","fx_hedging":"0","tracking_error":"0","yield_to_maturity":"2026-01-05","last_upd_date":"2023-08-28T11:15:36Z"}]}`)
 
 	stats, _, err := c.GetFactsheetStatistics(ctx, FactsheetOptions{ProjID: "M0027_2541"})
 	if err != nil {
@@ -377,7 +323,7 @@ func TestGetFactsheetStatistics(t *testing.T) {
 }
 
 func TestGetFundSpecifications(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/general-info/specifications" {
 			t.Errorf("unexpected path: %s", r.URL.Path)
 		}
@@ -387,11 +333,7 @@ func TestGetFundSpecifications(t *testing.T) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"main","spec_code":"EQ","spec_desc":"Equity Fund","last_upd_date":"2022-07-26T07:53:25Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	specs, _, err := c.GetFundSpecifications(ctx, FeeOptions{ProjID: "M0000_2552"})
 	if err != nil {
@@ -409,164 +351,90 @@ func TestGetFundSpecifications(t *testing.T) {
 }
 
 func TestGetFactsheetBenchmarks(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/benchmarks" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0000_2552" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("latest") != "true" {
-			t.Errorf("expected latest=true, got %q", q.Get("latest"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","group_seq":1,"benchmark":"ดัชนีผลตอบแทนรวมตลาดหลักทรัพย์แห่งประเทศไทย (SET TRI)","benchmark_remark":"","last_upd_date":"2022-07-26T07:53:25Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/benchmarks", "M0000_2552", true,
+		`{"message":"ok","items":[{"proj_id":"M0000_2552","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","group_seq":1,"benchmark":"SET TRI","benchmark_remark":"","last_upd_date":"2022-07-26T07:53:25Z"}]}`)
 
 	benchmarks, _, err := c.GetFactsheetBenchmarks(ctx, FactsheetOptions{ProjID: "M0000_2552", Latest: true})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(benchmarks) != 1 {
-		t.Fatalf("expected 1 benchmark, got %d", len(benchmarks))
-	}
-	if benchmarks[0].GroupSeq != 1 {
-		t.Errorf("unexpected group_seq: %d", benchmarks[0].GroupSeq)
-	}
-	if benchmarks[0].Benchmark != "ดัชนีผลตอบแทนรวมตลาดหลักทรัพย์แห่งประเทศไทย (SET TRI)" {
-		t.Errorf("unexpected benchmark: %s", benchmarks[0].Benchmark)
+	requireLen(t, benchmarks, 1)
+	if benchmarks[0].GroupSeq != 1 || benchmarks[0].Benchmark != "SET TRI" {
+		t.Errorf("unexpected benchmark: %+v", benchmarks[0])
 	}
 }
 
 func TestGetFundInvolveParties(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/general-info/involve-parties" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0000_2552" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("entity_type") != "R" {
-			t.Errorf("unexpected entity_type: %q", q.Get("entity_type"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","entity_type":"R","entity_name_en":"MFC ASSET MANAGEMENT PUBLIC COMPANY LIMITED","entity_name_th":"บริษัทหลักทรัพย์จัดการกองทุน เอ็มเอฟซี จำกัด (มหาชน)","address":"เลขที่ 199","last_upd_date":"2025-11-19T07:22:16Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newQueryServer(t, "/v2/fund/general-info/involve-parties",
+		map[string]string{"proj_id": "M0000_2552", "entity_type": "R"},
+		`{"message":"ok","items":[{"proj_id":"M0000_2552","entity_type":"R","entity_name_en":"MFC","entity_name_th":"เอ็มเอฟซี","address":"เลขที่ 199","last_upd_date":"2025-11-19T07:22:16Z"}]}`)
 
 	parties, _, err := c.GetFundInvolveParties(ctx, InvolvePartyOptions{ProjID: "M0000_2552", EntityType: "R"})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(parties) != 1 {
-		t.Fatalf("expected 1 involve party, got %d", len(parties))
-	}
-	if parties[0].EntityType != "R" {
-		t.Errorf("unexpected entity_type: %s", parties[0].EntityType)
-	}
-	if parties[0].EntityNameEN != "MFC ASSET MANAGEMENT PUBLIC COMPANY LIMITED" {
-		t.Errorf("unexpected entity_name_en: %s", parties[0].EntityNameEN)
+	requireLen(t, parties, 1)
+	if parties[0].EntityType != "R" || parties[0].EntityNameEN != "MFC" {
+		t.Errorf("unexpected party: %+v", parties[0])
 	}
 }
 
 func TestGetFundFactsheetURLs(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/urls" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0000_2552" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("fund_class_name") != "HIDIV-AR" {
-			t.Errorf("unexpected fund_class_name: %q", q.Get("fund_class_name"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"HIDIV-AR","prospectus_type":"Monthly","amc_url_factsheet":"https://documents.mfcfund.com/Website/FundFiles/Q&A/QA_HIDIV-AR.pdf","pdf_factsheet":"https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0000_2552.pdf","as_of_date":"2025-09-30","last_upd_date":"2025-10-31T03:32:17Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newQueryServer(t, "/v2/fund/factsheet/urls",
+		map[string]string{"proj_id": "M0000_2552", "fund_class_name": "HIDIV-AR"},
+		`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"HIDIV-AR","prospectus_type":"Monthly","amc_url_factsheet":"https://amc.example/factsheet.pdf","pdf_factsheet":"https://sec.example/factsheet.pdf","as_of_date":"2025-09-30","last_upd_date":"2025-10-31T03:32:17Z"}]}`)
 
 	urls, _, err := c.GetFundFactsheetURLs(ctx, FeeOptions{ProjID: "M0000_2552", FundClassName: "HIDIV-AR"})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(urls) != 1 {
-		t.Fatalf("expected 1 URL record, got %d", len(urls))
-	}
-	if urls[0].AMCURLFactsheet != "https://documents.mfcfund.com/Website/FundFiles/Q&A/QA_HIDIV-AR.pdf" {
-		t.Errorf("unexpected amc_url_factsheet: %s", urls[0].AMCURLFactsheet)
-	}
-	if urls[0].PDFFactsheet != "https://secdocumentstorage.blob.core.windows.net/fundfactsheet/M0000_2552.pdf" {
-		t.Errorf("unexpected pdf_factsheet: %s", urls[0].PDFFactsheet)
+	requireLen(t, urls, 1)
+	if urls[0].AMCURLFactsheet != "https://amc.example/factsheet.pdf" || urls[0].PDFFactsheet != "https://sec.example/factsheet.pdf" {
+		t.Errorf("unexpected urls: %+v", urls[0])
 	}
 }
 
 func TestGetFundIPOs(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/ipos" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0000_2552" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("latest") != "true" {
-			t.Errorf("expected latest=true, got %q", q.Get("latest"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","first_sell_start_date":"14/01/2552","first_sell_end_date":"20/01/2552","last_upd_date":"2022-07-26T07:53:25Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/ipos", "M0000_2552", true,
+		`{"message":"ok","items":[{"proj_id":"M0000_2552","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","first_sell_start_date":"14/01/2552","first_sell_end_date":"20/01/2552","last_upd_date":"2022-07-26T07:53:25Z"}]}`)
 
 	ipos, _, err := c.GetFundIPOs(ctx, FactsheetOptions{ProjID: "M0000_2552", Latest: true})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(ipos) != 1 {
-		t.Fatalf("expected 1 IPO record, got %d", len(ipos))
+	requireLen(t, ipos, 1)
+	if ipos[0].FirstSellStartDate != "14/01/2552" || ipos[0].FirstSellEndDate != "20/01/2552" {
+		t.Errorf("unexpected ipo: %+v", ipos[0])
 	}
-	if ipos[0].FirstSellStartDate != "14/01/2552" {
-		t.Errorf("unexpected first_sell_start_date: %s", ipos[0].FirstSellStartDate)
-	}
-	if ipos[0].FirstSellEndDate != "20/01/2552" {
-		t.Errorf("unexpected first_sell_end_date: %s", ipos[0].FirstSellEndDate)
+}
+
+func requireLen(t *testing.T, v any, n int) {
+	t.Helper()
+	switch x := v.(type) {
+	case []FactsheetBenchmark:
+		if len(x) != n {
+			t.Fatalf("expected %d items, got %d", n, len(x))
+		}
+	case []FundInvolveParty:
+		if len(x) != n {
+			t.Fatalf("expected %d items, got %d", n, len(x))
+		}
+	case []FundFactsheetURL:
+		if len(x) != n {
+			t.Fatalf("expected %d items, got %d", n, len(x))
+		}
+	case []FundIPO:
+		if len(x) != n {
+			t.Fatalf("expected %d items, got %d", n, len(x))
+		}
+	default:
+		t.Fatalf("unsupported type for requireLen")
 	}
 }
 
 func TestGetFactsheetDividendPolicy(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v2/fund/factsheet/dividend-policy" {
-			t.Errorf("unexpected path: %s", r.URL.Path)
-		}
-		q := r.URL.Query()
-		if q.Get("proj_id") != "M0000_2552" {
-			t.Errorf("unexpected proj_id: %q", q.Get("proj_id"))
-		}
-		if q.Get("latest") != "true" {
-			t.Errorf("expected latest=true, got %q", q.Get("latest"))
-		}
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"main","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","dividend_policy":"N","last_upd_date":"2022-07-26T07:53:25Z"}]}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	c, ctx := newFactsheetServer(t, "/v2/fund/factsheet/dividend-policy", "M0000_2552", true,
+		`{"message":"ok","items":[{"proj_id":"M0000_2552","fund_class_name":"main","start_date":"2022-06-30","end_date":"2022-07-26","prospectus_type":"Monthly","dividend_policy":"N","last_upd_date":"2022-07-26T07:53:25Z"}]}`)
 
 	policies, _, err := c.GetFactsheetDividendPolicy(ctx, FactsheetOptions{ProjID: "M0000_2552", Latest: true})
 	if err != nil {
@@ -581,14 +449,10 @@ func TestGetFactsheetDividendPolicy(t *testing.T) {
 }
 
 func TestServiceEndpointError(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write([]byte(`{"error":"internal"}`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL), WithMaxRetries(0))
-	ctx := context.Background()
+	})
 
 	_, _, err := c.ListAMCs(ctx, 10, "")
 	if err == nil {
@@ -600,14 +464,10 @@ func TestServiceEndpointError(t *testing.T) {
 }
 
 func TestServiceInvalidJSON(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	c, ctx := newTestClient(t, func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`not json`))
-	}))
-	defer server.Close()
-
-	c, _ := NewClient("key", WithBaseURL(server.URL))
-	ctx := context.Background()
+	})
 
 	_, _, err := c.ListAMCs(ctx, 10, "")
 	if err == nil {
