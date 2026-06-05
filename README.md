@@ -1,5 +1,8 @@
 # SEC-Go
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/jwitmann/sec-go.svg)](https://pkg.go.dev/github.com/jwitmann/sec-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jwitmann/sec-go)](https://goreportcard.com/report/github.com/jwitmann/sec-go)
+
 Go client library for the Thailand SEC OpenAPI V2 (`api.sec.or.th`).
 
 ## Installation
