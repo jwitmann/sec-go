@@ -62,6 +62,9 @@ func (c *Client) ListAMCs(ctx context.Context, pageSize int, cursor string) ([]A
 func (c *Client) GetFundProfiles(ctx context.Context, opts ProfileOptions) ([]FundProfile, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
+	if opts.ProjID != "" {
+		params.Set("proj_id", opts.ProjID)
+	}
 	if opts.FundClassName != "" {
 		params.Set("fund_class_name", opts.FundClassName)
 	}
@@ -82,6 +85,7 @@ func (c *Client) GetFundProfiles(ctx context.Context, opts ProfileOptions) ([]Fu
 type ProfileOptions struct {
 	PageSize      int
 	Cursor        string
+	ProjID        string
 	FundClassName string
 	FundStatus    string
 	ProjectInfo   string

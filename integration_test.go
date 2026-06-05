@@ -197,3 +197,19 @@ func TestIntegration_GetDividendHistory(t *testing.T) {
 	}
 	t.Logf("Got %d dividend history records", len(history))
 }
+
+func TestIntegration_GetFundsByCompany(t *testing.T) {
+	client := integrationClient(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	profiles, err := client.GetFundsByCompany(ctx, "Krungthai Asset Management")
+	if err != nil {
+		t.Fatalf("GetFundsByCompany failed: %v", err)
+	}
+	if len(profiles) == 0 {
+		t.Log("no funds found for company (company name may not match exactly)")
+	} else {
+		t.Logf("Got %d funds for company, first: %s", len(profiles), profiles[0].ProjID)
+	}
+}

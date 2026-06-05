@@ -119,6 +119,44 @@ client, err := sec.NewClient(
 
 All endpoints return paginated results: `([]T, nextCursor, error)`. Use `FetchAllPages` to automatically traverse cursors.
 
+## Convenience Helpers
+
+### Search by Company or Name
+
+```go
+// Get all funds managed by an AMC
+profiles, err := client.GetFundsByCompany(ctx, "Krungthai Asset Management")
+
+// Search across fund IDs, Thai names, English names, and abbreviations
+profiles, err := client.SearchFunds(ctx, "alpha")
+
+// Find an AMC by Thai/English name or unique ID
+amc, err := client.FindAMC(ctx, "กรุงศรี")
+```
+
+### Single-Fund Lookups
+
+```go
+profile, err := client.GetFundProfile(ctx, "KT-Alpha")
+nav, err := client.GetFundLatestNAV(ctx, "KT-Alpha")
+rs, err := client.GetFundRiskSpectrum(ctx, "KT-Alpha")
+fees, err := client.GetFundFactsheetFees(ctx, "KT-Alpha")
+allocation, err := client.GetFundAssetAllocation(ctx, "KT-Alpha")
+holdings, err := client.GetFundTop5Holdings(ctx, "KT-Alpha")
+```
+
+### Unified Portfolio View
+
+Fetches asset allocation, top 5 holdings, quarterly portfolio, and monthly asset breakdown concurrently:
+
+```go
+portfolio, err := client.GetFundPortfolio(ctx, "KT-Alpha")
+fmt.Println("Asset allocation:", portfolio.AssetAllocation)
+fmt.Println("Top 5 holdings:", portfolio.Top5Holdings)
+fmt.Println("Quarterly portfolio:", portfolio.QuarterlyPortfolio)
+fmt.Println("Monthly asset breakdown:", portfolio.MonthlyAssetBreakdown)
+```
+
 ## Pagination
 
 ```go

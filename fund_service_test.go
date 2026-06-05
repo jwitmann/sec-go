@@ -92,6 +92,41 @@ func TestGetFundProfiles(t *testing.T) {
 	}
 }
 
+func TestGetFundsByCompanyName(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/v2/fund/general-info/profiles" {
+			t.Errorf("unexpected path: %s", r.URL.Path)
+		}
+		q := r.URL.Query()
+		if q.Get("company_info") != "Krungthai Asset Management" {
+			t.Errorf("unexpected company_info: %q", q.Get("company_info"))
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"message":"ok","page_size":10,"items":[{"proj_id":"KT-Alpha","proj_name_th":"กรุงศรี อัลฟ่า","proj_name_en":"Krungthai Alpha","fund_status":"RG"},{"proj_id":"KT-Beta","proj_name_th":"กรุงศรี เบต้า","proj_name_en":"Krungthai Beta","fund_status":"RG"}]}`))
+	}))
+	defer server.Close()
+
+	c, _ := NewClient("key", WithBaseURL(server.URL))
+	ctx := context.Background()
+
+	profiles, _, err := c.GetFundProfiles(ctx, ProfileOptions{CompanyInfo: "Krungthai Asset Management"})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(profiles) != 2 {
+		t.Fatalf("expected 2 funds, got %d", len(profiles))
+	}
+	if profiles[0].ProjID != "KT-Alpha" {
+		t.Errorf("unexpected first proj_id: %s", profiles[0].ProjID)
+	}
+	if profiles[1].ProjID != "KT-Beta" {
+		t.Errorf("unexpected second proj_id: %s", profiles[1].ProjID)
+	}
+	if profiles[0].ProjNameEN != "Krungthai Alpha" {
+		t.Errorf("unexpected first name: %s", profiles[0].ProjNameEN)
+	}
+}
+
 func TestGetDailyNAV(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/v2/fund/daily-info/nav" {
