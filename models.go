@@ -76,9 +76,9 @@ type FundProfile struct {
 	InvestCountryFlag            string   `json:"invest_country_flag"`
 	ProjRetailType               string   `json:"proj_retail_type"`
 	ProjTermFlag                 string   `json:"proj_term_flag"`
-	ProjTermDay                  string   `json:"proj_term_day"`
-	ProjTermMonth                string   `json:"proj_term_month"`
-	ProjTermYear                 string   `json:"proj_term_year"`
+	ProjTermDay                  *int     `json:"proj_term_day"`
+	ProjTermMonth                *int     `json:"proj_term_month"`
+	ProjTermYear                 *int     `json:"proj_term_year"`
 	PolicyDesc                   string   `json:"policy_desc"`
 	InvestmentPolicyDesc         string   `json:"investment_policy_desc"`
 	ManagementStyle              string   `json:"management_style"`
