@@ -13,14 +13,15 @@ go get github.com/jwitmann/sec-go
 
 ## Getting API Keys
 
-1. Go to the [Thailand SEC Open Data portal](https://api-portal.sec.or.th/)
+1. Go to the [SEC Open Data developer portal](https://secopendata.sec.or.th/sec-open-apis?user=developer&type=getting-started&id=quick-start-guide)
 2. Sign up for a free developer account
-3. Navigate to **Products** → **Open Data APIs** and subscribe
-4. Go to **Applications** → create a new application (or use the default)
-5. In your application, click **Subscription** to add the Open Data API product
-6. Go to your **Profile** → **Keys** to view your **Primary key** and **Secondary key**
+3. Go to your **Profile** menu (top-right icon → "View profile")
+4. Under **Subscriptions**, click **Subscribe** to create a subscription key
+5. Your **Primary key** and **Secondary key** will be displayed on your profile page
 
-Both keys have the same quota. The secondary key is useful as a fallback if you hit rate limits on the primary key.
+Both keys share the same quota. The secondary key is useful as a fallback if you hit rate limits on the primary key.
+
+> **Note:** The legacy V1 API (`api-portal.sec.or.th`) is obsolete. This library targets the V2 API (`api.sec.or.th`) exclusively.
 
 ## Quick Start
 
