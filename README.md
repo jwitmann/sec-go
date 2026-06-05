@@ -191,6 +191,14 @@ for _, r := range results {
 }
 ```
 
+## DateTime Handling
+
+The SEC API returns datetime values in inconsistent formats (e.g., `2026-06-05T15:15:20.9` with fractional seconds but no timezone). The library uses a custom `sec.DateTime` type that transparently parses RFC3339, fractional-second timestamps, and plain dates (`YYYY-MM-DD`). You can use `.Time()` to get a standard `time.Time` value:
+
+```go
+fmt.Println(amc.LastUpdDate.Time())
+```
+
 ## Rate Limiting
 
 The client enforces a minimum 16ms delay between requests to comply with SEC's rate limits (5,000 calls per 300 seconds). The rate limiter is thread-safe and respects context cancellation.
@@ -291,13 +299,17 @@ sec-go/
 ├── rate.go                # Rate limiter
 ├── retry.go               # Retry logic
 ├── fund_service.go        # Fund API service methods (all 21 endpoints)
-├── models.go              # V2 response models
+├── models.go              # V2 response models (includes flexible DateTime parsing)
 ├── pagination.go          # Pagination helpers
 ├── batch.go               # Batch/concurrent operations
+├── language.go            # Language preference + Thai↔English translation helpers
+├── helpers_fund.go        # Convenience helpers: SearchFunds, GetFundsByCompany, etc.
 ├── client_test.go         # Client unit tests
 ├── fund_service_test.go   # Service method tests
 ├── pagination_test.go     # Pagination tests
 ├── batch_test.go          # Batch operation tests
+├── language_test.go       # Language/translation tests
+├── helpers_fund_test.go   # Convenience helper tests
 ├── integration_test.go    # Real API integration tests
 ├── internal/
 │   ├── cache/             # In-memory cache
@@ -305,7 +317,8 @@ sec-go/
 ├── config/
 │   └── sec-keys.example.json  # API key config template
 ├── cmd/
-│   └── sec-cli/           # CLI tool for ad-hoc queries
+│   ├── sec-cli/           # CLI tool for ad-hoc queries
+│   └── sec-lookup/        # Debug tool for fund lookups
 ├── docs/
 │   └── v2-schemas/        # Sample responses + API.md
 ├── examples/              # Usage examples

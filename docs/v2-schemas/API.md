@@ -76,9 +76,11 @@ On non-2xx responses, the body is typically empty or contains a plain text messa
 | Type | Format | Example |
 |------|--------|---------|
 | `date` | ISO 8601 (`YYYY-MM-DD`) | `2024-01-15` |
-| `datetime` | ISO 8601 with time (`YYYY-MM-DDTHH:MM:SS`) | `2024-01-15T09:30:00` |
+| `datetime` | ISO 8601 with time. SEC is inconsistent: may include timezone (`Z` or `+07:00`), fractional seconds (`2024-01-15T09:30:00.9`), or neither. | `2024-01-15T09:30:00`, `2024-01-15T09:30:00.9`, `2024-01-15T09:30:00+07:00` |
 | `period` | `YYYYMM` | `202401` |
 | `proj_id` | `{Type}{ID}_YYYY` | `M0000_2552`, `PRINCIPALi9` |
+
+**Note on datetime parsing:** If you are implementing a client, use a lenient datetime parser. SEC does not consistently apply a single datetime format across endpoints or records.
 
 ---
 

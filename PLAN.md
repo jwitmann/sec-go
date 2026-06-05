@@ -19,14 +19,18 @@ sec-go/
 ├── retry.go               # Retry logic
 ├── helpers.go             # Utility helpers
 ├── fund_service.go        # V2 Fund API methods (all 21 endpoints)
-├── models.go              # V2 data models
+├── models.go              # V2 data models (includes flexible DateTime type)
 ├── pagination.go          # Pagination helper (FetchAllPages)
 ├── batch.go               # Concurrent batch operations
+├── language.go            # Language preference + Thai↔English translation helpers
+├── helpers_fund.go        # Convenience helpers: SearchFunds, GetFundsByCompany, etc.
 │
 ├── client_test.go         # Client tests
 ├── fund_service_test.go   # Service method tests
 ├── pagination_test.go     # Pagination tests
 ├── batch_test.go          # Batch operation tests
+├── language_test.go       # Language/translation tests
+├── helpers_fund_test.go   # Convenience helper tests
 ├── integration_test.go    # Real API integration tests (build tag: integration)
 │
 ├── internal/
@@ -45,7 +49,8 @@ sec-go/
 │   └── thaifa/            # THAIFA fallback pattern
 │
 ├── cmd/
-│   └── sec-cli/           # CLI tool for ad-hoc API queries
+│   ├── sec-cli/           # CLI tool for ad-hoc API queries
+│   └── sec-lookup/        # Debug tool for fund lookups
 │
 ├── go.mod
 ├── go.sum
@@ -131,26 +136,47 @@ Daily Info:
 - Generic `FetchAllPages[T]` for cursor pagination
 - `BatchGetNAVs` + `BatchGetFundProfiles` for concurrent fetching with progress callbacks
 - Refactored `fund_service.go` using `fetchPaginated[T]`, `setPagination`, `setDateRange`, `buildPath` helpers
-- Zero clone groups detected by `dupl`
+- Flexible `DateTime` type in `models.go` to handle SEC's inconsistent datetime formats (RFC3339, fractional seconds without timezone, plain dates)
+
+**Convenience helpers (`helpers_fund.go`):**
+- `SearchFunds(ctx, query)` — search across `proj_id`, names, and abbreviations
+- `GetFundsByCompany(ctx, companyName)` — get all funds managed by an AMC
+- `FindAMC(ctx, query)` — find an AMC by Thai/English name or `unique_id`
+- `GetFundProfile(ctx, projID)` — single-fund profile lookup
+- `GetFundLatestNAV(ctx, projID)` — latest NAV for one fund
+- `GetFundRiskSpectrum(ctx, projID)` — latest risk spectrum
+- `GetFundFactsheetFees(ctx, projID)` — latest factsheet fees
+- `GetFundAssetAllocation(ctx, projID)` — latest asset allocation
+- `GetFundTop5Holdings(ctx, projID)` — latest top 5 holdings
+- `GetFundPortfolio(ctx, projID)` — unified portfolio view (concurrent fetch of 4 datasets)
+
+**Language support (`language.go`):**
+- `Language` type with `LanguageThai` / `LanguageEnglish`
+- `WithLanguage(lang)` option and `Client.Language()` getter
+- Bilingual helpers: `AMC.Name()`, `FundProfile.Name()`, `FundProfile.CompanyName()`, `FundInvolveParty.EntityName()`
+- Thai→English translation maps and functions for fee types, units, asset names, and liability categories
 
 **Tests added:**
 - `fund_service_test.go` — mock server tests for all service methods + error cases
 - `pagination_test.go` — pagination helper tests
 - `batch_test.go` — batch operation tests (concurrency, progress, context cancellation)
+- `language_test.go` — language normalization and translation tests
+- `helpers_fund_test.go` — convenience helper tests (search, company lookup, portfolio view)
 
-**All unit tests passing: 39 tests.**
+**All unit tests passing: 68 tests.**
 
 ---
 
 ## Phase 4: Polish, Documentation & Developer Tools ✅ COMPLETE
 
 **Deliverables:**
-- `README.md` — Installation, auth, all 21 endpoints, pagination, batch ops, examples, project structure
-- `docs/v2-schemas/API.md` — Sorted endpoint inventory with parameters and response fields
+- `README.md` — Installation, auth, all 21 endpoints, pagination, batch ops, convenience helpers, language support, examples, project structure
+- `docs/v2-schemas/API.md` — Implementation-grade sorted endpoint inventory with parameters, response fields, example URLs, and linked sample JSON files
 - `examples/basic/main.go` — list AMCs, get profiles, get NAV
 - `examples/batch/main.go` — fetch NAV history for multiple funds concurrently
 - `examples/thaifa/main.go` — THAIFA fallback integration pattern
 - `cmd/sec-cli/main.go` — CLI tool for ad-hoc queries against the live API
+- `cmd/sec-lookup/main.go` — Debug tool for fund lookups (e.g., TRAREEARTH investigation)
 - `integration_test.go` — Integration tests gated by `//go:build integration`
 - `Makefile` with `test`, `lint`, `format`, `check`, `test-integration` targets
 - `AGENTS.md` with project guidelines
@@ -160,8 +186,8 @@ Daily Info:
 - `staticcheck` ✅
 - `go vet` ✅
 - `gocyclo -over 25` ✅
-- `dupl -t 100` ✅ (0 clone groups)
-- `go test ./...` ✅ (39 tests)
+- `dupl -t 100` ✅ (tolerated clone groups in test setup patterns)
+- `go test ./...` ✅ (68 tests)
 
 ---
 
@@ -213,6 +239,9 @@ func (s *PriceService) GetPrices(fundID, shortCode string, from, to time.Time) (
 | **No OHLCV emulation** | SEC provides daily closing NAV only. Don't fake data. |
 | **Generic pagination** | `FetchAllPages[T]` works for any paginated endpoint. |
 | **Batch operations separate** | `BatchGetNAVs` / `BatchGetFundProfiles` are opt-in concurrency helpers. |
+| **Convenience helpers** | `SearchFunds`, `GetFundsByCompany`, `FindAMC`, `GetFundPortfolio` provide a simpler API on top of raw paginated endpoints. |
+| **Flexible datetime parsing** | SEC returns inconsistent datetime formats (with/without timezone, fractional seconds). A custom `DateTime` type handles them transparently. |
+| **Language support built-in** | Bilingual field helpers + Thai→English translation maps for Thai-only fields. |
 | **Integration tests gated** | Real API tests behind `go:build integration` to avoid accidental usage/cost. |
 
 ---
