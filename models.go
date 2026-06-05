@@ -61,3 +61,38 @@ type DailyNAV struct {
 	BuySwapPrice  float64   `json:"buy_swap_price"`
 	LastUpdDate   time.Time `json:"last_upd_date"`
 }
+
+type MutualFundFee struct {
+	ProjID        string    `json:"proj_id"`
+	FundClassName string    `json:"fund_class_name"`
+	FeeTypeDesc   string    `json:"fee_type_desc"`
+	Rate          float64   `json:"rate"`
+	RateUnit      string    `json:"rate_unit"`
+	FeeOtherDesc  string    `json:"fee_other_desc"`
+	LastUpdDate   time.Time `json:"last_upd_date"`
+}
+
+type FactsheetFee struct {
+	ProjID         string    `json:"proj_id"`
+	FundClassName  string    `json:"fund_class_name"`
+	StartDate      string    `json:"start_date"`
+	EndDate        string    `json:"end_date"`
+	ProspectusType string    `json:"prospectus_type"`
+	FeeTypeDesc    string    `json:"fee_type_desc"`
+	Rate           float64   `json:"rate"`
+	ActualValue    float64   `json:"actual_value"`
+	FeeOtherDesc   string    `json:"fee_other_desc"`
+	LastUpdDate    time.Time `json:"last_upd_date"`
+}
+
+type FactsheetPerformance struct {
+	ProjID              string    `json:"proj_id"`
+	FundClassName       string    `json:"fund_class_name"`
+	StartDate           string    `json:"start_date"`
+	EndDate             string    `json:"end_date"`
+	ProspectusType      string    `json:"prospectus_type"`
+	PerformanceTypeDesc string    `json:"performance_type_desc"`
+	ReferencePeriod     string    `json:"reference_period"`
+	PerformanceValue    float64   `json:"performance_value"`
+	LastUpdDate         time.Time `json:"last_upd_date"`
+}

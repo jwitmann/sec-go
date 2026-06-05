@@ -140,3 +140,146 @@ type NAVOptions struct {
 	EndDate       time.Time
 	FundClassName string
 }
+
+func (c *Client) GetMutualFundFees(ctx context.Context, opts FeeOptions) ([]MutualFundFee, string, error) {
+	params := url.Values{}
+	if opts.PageSize > 0 {
+		params.Set("page_size", strconv.Itoa(opts.PageSize))
+	}
+	if opts.Cursor != "" {
+		params.Set("next_cursor", opts.Cursor)
+	}
+	if opts.ProjID != "" {
+		params.Set("proj_id", opts.ProjID)
+	}
+	if opts.FundClassName != "" {
+		params.Set("fund_class_name", opts.FundClassName)
+	}
+
+	path := "/v2/fund/general-info/mutual-fund-fees"
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	data, err := c.Get(ctx, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("get mutual fund fees: %w", err)
+	}
+
+	var response struct {
+		PaginatedResponse
+		Items []MutualFundFee `json:"items"`
+	}
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, "", fmt.Errorf("unmarshal fees: %w", err)
+	}
+
+	return response.Items, response.NextCursor, nil
+}
+
+func (c *Client) GetFactsheetFees(ctx context.Context, opts FactsheetOptions) ([]FactsheetFee, string, error) {
+	params := url.Values{}
+	if opts.PageSize > 0 {
+		params.Set("page_size", strconv.Itoa(opts.PageSize))
+	}
+	if opts.Cursor != "" {
+		params.Set("next_cursor", opts.Cursor)
+	}
+	if opts.ProjID != "" {
+		params.Set("proj_id", opts.ProjID)
+	}
+	if !opts.StartDate.IsZero() {
+		params.Set("start_date", opts.StartDate.Format("2006-01-02"))
+	}
+	if !opts.EndDate.IsZero() {
+		params.Set("end_date", opts.EndDate.Format("2006-01-02"))
+	}
+	if opts.Latest {
+		params.Set("latest", "true")
+	}
+	if opts.FundClassName != "" {
+		params.Set("fund_class_name", opts.FundClassName)
+	}
+
+	path := "/v2/fund/factsheet/fees"
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	data, err := c.Get(ctx, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("get factsheet fees: %w", err)
+	}
+
+	var response struct {
+		PaginatedResponse
+		Items []FactsheetFee `json:"items"`
+	}
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, "", fmt.Errorf("unmarshal factsheet fees: %w", err)
+	}
+
+	return response.Items, response.NextCursor, nil
+}
+
+func (c *Client) GetFactsheetPerformance(ctx context.Context, opts FactsheetOptions) ([]FactsheetPerformance, string, error) {
+	params := url.Values{}
+	if opts.PageSize > 0 {
+		params.Set("page_size", strconv.Itoa(opts.PageSize))
+	}
+	if opts.Cursor != "" {
+		params.Set("next_cursor", opts.Cursor)
+	}
+	if opts.ProjID != "" {
+		params.Set("proj_id", opts.ProjID)
+	}
+	if !opts.StartDate.IsZero() {
+		params.Set("start_date", opts.StartDate.Format("2006-01-02"))
+	}
+	if !opts.EndDate.IsZero() {
+		params.Set("end_date", opts.EndDate.Format("2006-01-02"))
+	}
+	if opts.Latest {
+		params.Set("latest", "true")
+	}
+	if opts.FundClassName != "" {
+		params.Set("fund_class_name", opts.FundClassName)
+	}
+
+	path := "/v2/fund/factsheet/performance"
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	data, err := c.Get(ctx, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("get factsheet performance: %w", err)
+	}
+
+	var response struct {
+		PaginatedResponse
+		Items []FactsheetPerformance `json:"items"`
+	}
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, "", fmt.Errorf("unmarshal performance: %w", err)
+	}
+
+	return response.Items, response.NextCursor, nil
+}
+
+type FeeOptions struct {
+	PageSize      int
+	Cursor        string
+	ProjID        string
+	FundClassName string
+}
+
+type FactsheetOptions struct {
+	PageSize      int
+	Cursor        string
+	ProjID        string
+	StartDate     time.Time
+	EndDate       time.Time
+	Latest        bool
+	FundClassName string
+}
