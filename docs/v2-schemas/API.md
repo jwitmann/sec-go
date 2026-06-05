@@ -257,6 +257,119 @@ GET /v2/fund/factsheet/asset-allocation
 
 ---
 
+### 11. Fund Risk Spectrum
+```
+GET /v2/fund/factsheet/risk-spectrum
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| risk_spectrum | string | Risk level (RS1-RS8, RS81) |
+| risk_spectrum_desc | string | Risk level description |
+
+---
+
+### 17. Top 5 Holdings
+```
+GET /v2/fund/factsheet/top5-holdings
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| asset_seq | int | Holding rank (1-5) |
+| asset_name | string | Asset/security name |
+| asset_ratio | float | %NAV allocation |
+
+---
+
+## Outstanding Endpoints
+
+### 18. Quarterly Fund Portfolio
+```
+GET /v2/fund/outstanding/portfolio
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_period | string | Starting period (YYYYMM) |
+| end_period | string | Ending period (YYYYMM) |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| period | int | Reporting period (YYYYMM) |
+| as_of_date | date | Portfolio as-of date |
+| assetliab_id | string | Asset/liability category code |
+| assetliab_desc | string | Category description |
+| issue_code | string | Security symbol |
+| isin_code | string | ISIN code |
+| issuer | string | Issuer name |
+| assetliab_value | number | Market value (THB) |
+| percent_nav | number | %NAV |
+
+---
+
+### 19. Monthly Fund Portfolio by Asset Type
+```
+GET /v2/fund/outstanding/portfolio-asset-type
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_period | string | Starting period (YYYYMM) |
+| end_period | string | Ending period (YYYYMM) |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| period | int | Reporting period (YYYYMM) |
+| assetliab_code | string | Investment category code |
+| assetliab_desc | string | Category description |
+| market_value | number | Market value (THB) |
+| percent_nav | number | %NAV |
+
+---
+
 ### 21. Dividend History
 ```
 GET /v2/fund/daily-info/dividend-history

@@ -1,0 +1,72 @@
+{
+  "message": "success",
+  "page_size": 5,
+  "next_cursor": "NXwzdHhJd08wdTU3UUNPQzU5YTNJWVNZRi81WWFNTE1pejg3TWZPai9zMnNJPQ==",
+  "items": [
+    {
+      "proj_id": "M0016_2565",
+      "period": 202306,
+      "as_of_date": "2023-06-30",
+      "assetliab_id": "205",
+      "assetliab_desc": "ตั๋วเงินคลัง (Treasury Bill)",
+      "issue_code": "TB23705A",
+      "isin_code": "TH0623073788",
+      "issuer": "MINISTRY OF FINANCE",
+      "assetliab_value": 94984906.4,
+      "percent_nav": 2.72392,
+      "last_upd_date": "2023-07-04T14:50:02"
+    },
+    {
+      "proj_id": "M0016_2565",
+      "period": 202306,
+      "as_of_date": "2023-06-30",
+      "assetliab_id": "205",
+      "assetliab_desc": "ตั๋วเงินคลัง (Treasury Bill)",
+      "issue_code": "TB23719A",
+      "isin_code": "TH0623A73784",
+      "issuer": "MINISTRY OF FINANCE",
+      "assetliab_value": 127903297.28,
+      "percent_nav": 3.66794,
+      "last_upd_date": "2023-07-04T14:50:02"
+    },
+    {
+      "proj_id": "M0016_2565",
+      "period": 202306,
+      "as_of_date": "2023-06-30",
+      "assetliab_id": "205",
+      "assetliab_desc": "ตั๋วเงินคลัง (Treasury Bill)",
+      "issue_code": "TB23802A",
+      "isin_code": "TH0623073887",
+      "issuer": "MINISTRY OF FINANCE",
+      "assetliab_value": 21967195.36,
+      "percent_nav": 0.62996,
+      "last_upd_date": "2023-07-04T14:50:02"
+    },
+    {
+      "proj_id": "M0016_2565",
+      "period": 202306,
+      "as_of_date": "2023-06-30",
+      "assetliab_id": "205",
+      "assetliab_desc": "ตั๋วเงินคลัง (Treasury Bill)",
+      "issue_code": "TB23816A",
+      "isin_code": "TH0623A73883",
+      "issuer": "MINISTRY OF FINANCE",
+      "assetliab_value": 144680792.65,
+      "percent_nav": 4.14908,
+      "last_upd_date": "2023-07-04T14:50:02"
+    },
+    {
+      "proj_id": "M0016_2565",
+      "period": 202306,
+      "as_of_date": "2023-06-30",
+      "assetliab_id": "205",
+      "assetliab_desc": "ตั๋วเงินคลัง (Treasury Bill)",
+      "issue_code": "TB23830A",
+      "isin_code": "TH0623B73881",
+      "issuer": "MINISTRY OF FINANCE",
+      "assetliab_value": 29908492.2,
+      "percent_nav": 0.8577,
+      "last_upd_date": "2023-07-04T14:50:02"
+    }
+  ]
+}

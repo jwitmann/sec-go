@@ -27,8 +27,19 @@ func main() {
 	fmt.Println("=== Discovering Additional Endpoints ===")
 	fmt.Println()
 
-	probeAndSave(ctx, client, "dividend-history", "/v2/fund/daily-info/dividend-history?page_size=5")
-	probeAndSave(ctx, client, "asset-allocation", "/v2/fund/factsheet/asset-allocation?page_size=5")
+	endpoints := []struct {
+		name string
+		path string
+	}{
+		{"risk-spectrum", "/v2/fund/factsheet/risk-spectrum?page_size=5"},
+		{"top5-holdings", "/v2/fund/factsheet/top5-holdings?page_size=5"},
+		{"quarterly-portfolio", "/v2/fund/outstanding/portfolio?page_size=5"},
+		{"monthly-portfolio-asset", "/v2/fund/outstanding/portfolio-asset-type?page_size=5"},
+	}
+
+	for _, ep := range endpoints {
+		probeAndSave(ctx, client, ep.name, ep.path)
+	}
 
 	fmt.Println("=== Done ===")
 }

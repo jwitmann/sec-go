@@ -117,3 +117,47 @@ type AssetAllocation struct {
 	AssetRatio     float64   `json:"asset_ratio"`
 	LastUpdDate    time.Time `json:"last_upd_date"`
 }
+
+type RiskSpectrum struct {
+	ProjID           string    `json:"proj_id"`
+	StartDate        string    `json:"start_date"`
+	EndDate          string    `json:"end_date"`
+	ProspectusType   string    `json:"prospectus_type"`
+	RiskSpectrum     string    `json:"risk_spectrum"`
+	RiskSpectrumDesc string    `json:"risk_spectrum_desc"`
+	LastUpdDate      time.Time `json:"last_upd_date"`
+}
+
+type Top5Holding struct {
+	ProjID         string    `json:"proj_id"`
+	StartDate      string    `json:"start_date"`
+	EndDate        string    `json:"end_date"`
+	ProspectusType string    `json:"prospectus_type"`
+	AssetSeq       int       `json:"asset_seq"`
+	AssetName      string    `json:"asset_name"`
+	AssetRatio     float64   `json:"asset_ratio"`
+	LastUpdDate    time.Time `json:"last_upd_date"`
+}
+
+type QuarterlyPortfolio struct {
+	ProjID         string  `json:"proj_id"`
+	Period         int     `json:"period"`
+	AsOfDate       string  `json:"as_of_date"`
+	AssetliabID    string  `json:"assetliab_id"`
+	AssetliabDesc  string  `json:"assetliab_desc"`
+	IssueCode      string  `json:"issue_code"`
+	ISINCode       string  `json:"isin_code"`
+	Issuer         string  `json:"issuer"`
+	AssetliabValue float64 `json:"assetliab_value"`
+	PercentNAV     float64 `json:"percent_nav"`
+	LastUpdDate    string  `json:"last_upd_date"`
+}
+
+type MonthlyPortfolioAssetType struct {
+	ProjID        string  `json:"proj_id"`
+	Period        int     `json:"period"`
+	AssetliabCode string  `json:"assetliab_code"`
+	AssetliabDesc string  `json:"assetliab_desc"`
+	MarketValue   float64 `json:"market_value"`
+	PercentNAV    float64 `json:"percent_nav"`
+}
