@@ -9,44 +9,59 @@ import (
 	"time"
 )
 
-func (c *Client) ListAMCs(ctx context.Context, pageSize int, cursor string) ([]AMC, string, error) {
-	params := url.Values{}
+func fetchPaginated[T any](ctx context.Context, c *Client, path string, op string) ([]T, string, error) {
+	data, err := c.Get(ctx, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("%s: %w", op, err)
+	}
+
+	var response struct {
+		PaginatedResponse
+		Items []T `json:"items"`
+	}
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, "", fmt.Errorf("unmarshal %s: %w", op, err)
+	}
+
+	return response.Items, response.NextCursor, nil
+}
+
+func setPagination(params url.Values, pageSize int, cursor string) {
 	if pageSize > 0 {
 		params.Set("page_size", strconv.Itoa(pageSize))
 	}
 	if cursor != "" {
 		params.Set("next_cursor", cursor)
 	}
+}
 
-	path := "/v2/fund/general-info/amcs"
-	if len(params) > 0 {
-		path += "?" + params.Encode()
+func setDateRange(params url.Values, startKey, endKey string, startDate, endDate time.Time) {
+	if !startDate.IsZero() {
+		params.Set(startKey, startDate.Format("2006-01-02"))
 	}
+	if !endDate.IsZero() {
+		params.Set(endKey, endDate.Format("2006-01-02"))
+	}
+}
 
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("list AMCs: %w", err)
+func buildPath(base string, params url.Values) string {
+	if len(params) == 0 {
+		return base
 	}
+	return base + "?" + params.Encode()
+}
 
-	var response struct {
-		PaginatedResponse
-		Items []AMC `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal AMCs: %w", err)
-	}
+func (c *Client) ListAMCs(ctx context.Context, pageSize int, cursor string) ([]AMC, string, error) {
+	params := url.Values{}
+	setPagination(params, pageSize, cursor)
 
-	return response.Items, response.NextCursor, nil
+	path := buildPath("/v2/fund/general-info/amcs", params)
+	return fetchPaginated[AMC](ctx, c, path, "list AMCs")
 }
 
 func (c *Client) GetFundProfiles(ctx context.Context, opts ProfileOptions) ([]FundProfile, string, error) {
 	params := url.Values{}
-	if opts.PageSize > 0 {
-		params.Set("page_size", strconv.Itoa(opts.PageSize))
-	}
-	if opts.Cursor != "" {
-		params.Set("next_cursor", opts.Cursor)
-	}
+	setPagination(params, opts.PageSize, opts.Cursor)
 	if opts.FundClassName != "" {
 		params.Set("fund_class_name", opts.FundClassName)
 	}
@@ -60,25 +75,8 @@ func (c *Client) GetFundProfiles(ctx context.Context, opts ProfileOptions) ([]Fu
 		params.Set("company_info", opts.CompanyInfo)
 	}
 
-	path := "/v2/fund/general-info/profiles"
-	if len(params) > 0 {
-		path += "?" + params.Encode()
-	}
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get fund profiles: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []FundProfile `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal profiles: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	path := buildPath("/v2/fund/general-info/profiles", params)
+	return fetchPaginated[FundProfile](ctx, c, path, "get fund profiles")
 }
 
 type ProfileOptions struct {
@@ -91,45 +89,21 @@ type ProfileOptions struct {
 }
 
 func (c *Client) GetDailyNAV(ctx context.Context, opts NAVOptions) ([]DailyNAV, string, error) {
+	path := buildPath("/v2/fund/daily-info/nav", buildNAVParams(opts))
+	return fetchPaginated[DailyNAV](ctx, c, path, "get daily NAV")
+}
+
+func buildNAVParams(opts NAVOptions) url.Values {
 	params := url.Values{}
-	if opts.PageSize > 0 {
-		params.Set("page_size", strconv.Itoa(opts.PageSize))
-	}
-	if opts.Cursor != "" {
-		params.Set("next_cursor", opts.Cursor)
-	}
+	setPagination(params, opts.PageSize, opts.Cursor)
 	if opts.ProjID != "" {
 		params.Set("proj_id", opts.ProjID)
 	}
-	if !opts.StartDate.IsZero() {
-		params.Set("start_nav_date", opts.StartDate.Format("2006-01-02"))
-	}
-	if !opts.EndDate.IsZero() {
-		params.Set("end_nav_date", opts.EndDate.Format("2006-01-02"))
-	}
+	setDateRange(params, "start_nav_date", "end_nav_date", opts.StartDate, opts.EndDate)
 	if opts.FundClassName != "" {
 		params.Set("fund_class_name", opts.FundClassName)
 	}
-
-	path := "/v2/fund/daily-info/nav"
-	if len(params) > 0 {
-		path += "?" + params.Encode()
-	}
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get daily NAV: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []DailyNAV `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal NAV: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return params
 }
 
 type NAVOptions struct {
@@ -143,12 +117,7 @@ type NAVOptions struct {
 
 func (c *Client) GetMutualFundFees(ctx context.Context, opts FeeOptions) ([]MutualFundFee, string, error) {
 	params := url.Values{}
-	if opts.PageSize > 0 {
-		params.Set("page_size", strconv.Itoa(opts.PageSize))
-	}
-	if opts.Cursor != "" {
-		params.Set("next_cursor", opts.Cursor)
-	}
+	setPagination(params, opts.PageSize, opts.Cursor)
 	if opts.ProjID != "" {
 		params.Set("proj_id", opts.ProjID)
 	}
@@ -156,63 +125,18 @@ func (c *Client) GetMutualFundFees(ctx context.Context, opts FeeOptions) ([]Mutu
 		params.Set("fund_class_name", opts.FundClassName)
 	}
 
-	path := "/v2/fund/general-info/mutual-fund-fees"
-	if len(params) > 0 {
-		path += "?" + params.Encode()
-	}
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get mutual fund fees: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []MutualFundFee `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal fees: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	path := buildPath("/v2/fund/general-info/mutual-fund-fees", params)
+	return fetchPaginated[MutualFundFee](ctx, c, path, "get mutual fund fees")
 }
 
 func (c *Client) GetFactsheetFees(ctx context.Context, opts FactsheetOptions) ([]FactsheetFee, string, error) {
 	path := "/v2/fund/factsheet/fees" + buildFactsheetQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get factsheet fees: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []FactsheetFee `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal factsheet fees: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[FactsheetFee](ctx, c, path, "get factsheet fees")
 }
 
 func (c *Client) GetFactsheetPerformance(ctx context.Context, opts FactsheetOptions) ([]FactsheetPerformance, string, error) {
 	path := "/v2/fund/factsheet/performance" + buildFactsheetQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get factsheet performance: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []FactsheetPerformance `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal performance: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[FactsheetPerformance](ctx, c, path, "get factsheet performance")
 }
 
 type FeeOptions struct {
@@ -233,45 +157,21 @@ type FactsheetOptions struct {
 }
 
 func (c *Client) GetDividendHistory(ctx context.Context, opts DividendHistoryOptions) ([]DividendHistory, string, error) {
+	path := buildPath("/v2/fund/daily-info/dividend-history", buildDividendParams(opts))
+	return fetchPaginated[DividendHistory](ctx, c, path, "get dividend history")
+}
+
+func buildDividendParams(opts DividendHistoryOptions) url.Values {
 	params := url.Values{}
-	if opts.PageSize > 0 {
-		params.Set("page_size", strconv.Itoa(opts.PageSize))
-	}
-	if opts.Cursor != "" {
-		params.Set("next_cursor", opts.Cursor)
-	}
+	setPagination(params, opts.PageSize, opts.Cursor)
 	if opts.ProjID != "" {
 		params.Set("proj_id", opts.ProjID)
 	}
-	if !opts.StartDate.IsZero() {
-		params.Set("start_dividend_date", opts.StartDate.Format("2006-01-02"))
-	}
-	if !opts.EndDate.IsZero() {
-		params.Set("end_dividend_date", opts.EndDate.Format("2006-01-02"))
-	}
+	setDateRange(params, "start_dividend_date", "end_dividend_date", opts.StartDate, opts.EndDate)
 	if opts.ClassAbbrName != "" {
 		params.Set("class_abbr_name", opts.ClassAbbrName)
 	}
-
-	path := "/v2/fund/daily-info/dividend-history"
-	if len(params) > 0 {
-		path += "?" + params.Encode()
-	}
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get dividend history: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []DividendHistory `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal dividend history: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return params
 }
 
 type DividendHistoryOptions struct {
@@ -285,97 +185,27 @@ type DividendHistoryOptions struct {
 
 func (c *Client) GetAssetAllocation(ctx context.Context, opts FactsheetOptions) ([]AssetAllocation, string, error) {
 	path := "/v2/fund/factsheet/asset-allocation" + buildFactsheetQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get asset allocation: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []AssetAllocation `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal asset allocation: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[AssetAllocation](ctx, c, path, "get asset allocation")
 }
 
 func (c *Client) GetRiskSpectrum(ctx context.Context, opts FactsheetOptions) ([]RiskSpectrum, string, error) {
 	path := "/v2/fund/factsheet/risk-spectrum" + buildFactsheetQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get risk spectrum: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []RiskSpectrum `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal risk spectrum: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[RiskSpectrum](ctx, c, path, "get risk spectrum")
 }
 
 func (c *Client) GetTop5Holdings(ctx context.Context, opts FactsheetOptions) ([]Top5Holding, string, error) {
 	path := "/v2/fund/factsheet/top5-holdings" + buildFactsheetQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get top 5 holdings: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []Top5Holding `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal top 5 holdings: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[Top5Holding](ctx, c, path, "get top 5 holdings")
 }
 
 func (c *Client) GetQuarterlyPortfolio(ctx context.Context, opts OutstandingOptions) ([]QuarterlyPortfolio, string, error) {
 	path := "/v2/fund/outstanding/portfolio" + buildOutstandingQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get quarterly portfolio: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []QuarterlyPortfolio `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal quarterly portfolio: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[QuarterlyPortfolio](ctx, c, path, "get quarterly portfolio")
 }
 
 func (c *Client) GetMonthlyPortfolioAssetType(ctx context.Context, opts OutstandingOptions) ([]MonthlyPortfolioAssetType, string, error) {
 	path := "/v2/fund/outstanding/portfolio-asset-type" + buildOutstandingQuery(opts)
-
-	data, err := c.Get(ctx, path)
-	if err != nil {
-		return nil, "", fmt.Errorf("get monthly portfolio asset type: %w", err)
-	}
-
-	var response struct {
-		PaginatedResponse
-		Items []MonthlyPortfolioAssetType `json:"items"`
-	}
-	if err := json.Unmarshal(data, &response); err != nil {
-		return nil, "", fmt.Errorf("unmarshal monthly portfolio asset type: %w", err)
-	}
-
-	return response.Items, response.NextCursor, nil
+	return fetchPaginated[MonthlyPortfolioAssetType](ctx, c, path, "get monthly portfolio asset type")
 }
 
 type OutstandingOptions struct {

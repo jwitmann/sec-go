@@ -19,7 +19,7 @@ import (
     "log"
     "os"
 
-    "github.com/jwitmann/sec-go"
+    sec "github.com/jwitmann/sec-go"
 )
 
 func main() {
@@ -29,7 +29,13 @@ func main() {
     }
 
     ctx := context.Background()
-    // Use client...
+    amcs, _, err := client.ListAMCs(ctx, 10, "")
+    if err != nil {
+        log.Fatal(err)
+    }
+    for _, amc := range amcs {
+        fmt.Println(amc.CompNameEN)
+    }
 }
 ```
 
@@ -68,12 +74,71 @@ client, err := sec.NewClient(
     sec.WithMaxRetries(5),
     sec.WithRetryDelay(200*time.Millisecond),
     sec.WithBaseURL("https://custom.api.sec.or.th"),
+    sec.WithCache(cache, 5*time.Minute),
 )
+```
+
+## Supported Endpoints
+
+### General Info
+- `ListAMCs` — `/v2/fund/general-info/amcs`
+- `GetFundProfiles` — `/v2/fund/general-info/profiles`
+- `GetMutualFundFees` — `/v2/fund/general-info/mutual-fund-fees`
+
+### Daily Info
+- `GetDailyNAV` — `/v2/fund/daily-info/nav`
+- `GetDividendHistory` — `/v2/fund/daily-info/dividend-history`
+
+### Factsheet
+- `GetFactsheetFees` — `/v2/fund/factsheet/fees`
+- `GetFactsheetPerformance` — `/v2/fund/factsheet/performance`
+- `GetAssetAllocation` — `/v2/fund/factsheet/asset-allocation`
+- `GetRiskSpectrum` — `/v2/fund/factsheet/risk-spectrum`
+- `GetTop5Holdings` — `/v2/fund/factsheet/top5-holdings`
+
+### Outstanding
+- `GetQuarterlyPortfolio` — `/v2/fund/outstanding/portfolio`
+- `GetMonthlyPortfolioAssetType` — `/v2/fund/outstanding/portfolio-asset-type`
+
+All endpoints return paginated results: `([]T, nextCursor, error)`. Use `FetchAllPages` to automatically traverse cursors.
+
+## Pagination
+
+```go
+navs, err := sec.FetchAllPages(func(ctx context.Context, cursor string) ([]sec.DailyNAV, string, error) {
+    return client.GetDailyNAV(ctx, sec.NAVOptions{
+        ProjID:    "PRINCIPALi9",
+        StartDate: start,
+        EndDate:   end,
+        Cursor:    cursor,
+    })
+})
+```
+
+## Batch Operations
+
+Fetch NAV history for multiple funds concurrently with built-in rate limiting:
+
+```go
+results := sec.BatchGetNAVs(ctx, client, projIDs, startDate, endDate, sec.BatchNAVOptions{
+    Concurrency: 4,
+    Progress: func(completed, total int) {
+        fmt.Printf("Progress: %d/%d\n", completed, total)
+    },
+})
+
+for _, r := range results {
+    if r.Err != nil {
+        log.Printf("%s failed: %v", r.ProjID, r.Err)
+        continue
+    }
+    fmt.Printf("%s: %d NAV records\n", r.ProjID, len(r.NAVs))
+}
 ```
 
 ## Rate Limiting
 
-The client enforces a minimum 100ms delay between requests to comply with SEC's rate limits (3,000 calls per 300 seconds). The rate limiter is thread-safe and respects context cancellation.
+The client enforces a minimum 16ms delay between requests to comply with SEC's rate limits (5,000 calls per 300 seconds). The rate limiter is thread-safe and respects context cancellation.
 
 ## Error Handling
 
@@ -81,13 +146,21 @@ The client enforces a minimum 100ms delay between requests to comply with SEC's 
 var (
     sec.ErrRateLimited  // HTTP 429
     sec.ErrNotFound     // HTTP 204
-    sec.ErrUnauthorized // HTTP 401
+    sec.ErrUnauthorized // HTTP 401 / missing API key
 )
 ```
 
 Retry behavior:
 - Retries on: 429, 500, 502, 503, 504, network errors
 - Does not retry on: 400, 401, 403, 404
+- Special handling for HTTP 421 with `Retry-After` header
+
+## Examples
+
+See `examples/`:
+- `examples/basic/` — list AMCs and get NAV
+- `examples/batch/` — fetch NAV history for multiple funds
+- `examples/thaifa/` — THAIFA fallback integration pattern
 
 ## Testing
 
@@ -96,7 +169,7 @@ Run unit tests:
 make test
 ```
 
-Run all checks (format, lint, test):
+Run all checks (format, lint, test, duplicate code):
 ```bash
 make check
 ```
@@ -110,17 +183,28 @@ make test-integration
 
 ```
 sec-go/
-├── client.go          # Core HTTP client
-├── options.go         # Functional options
-├── error.go           # Error types
-├── rate.go            # Rate limiter
-├── retry.go           # Retry logic
-├── client_test.go     # Unit tests
+├── client.go              # Core HTTP client
+├── options.go             # Functional options
+├── error.go               # Error types
+├── rate.go                # Rate limiter
+├── retry.go               # Retry logic
+├── fund_service.go        # Fund API service methods
+├── models.go              # V2 response models
+├── pagination.go          # Pagination helpers
+├── batch.go               # Batch/concurrent operations
+├── client_test.go         # Client unit tests
+├── fund_service_test.go   # Service method tests
+├── pagination_test.go     # Pagination tests
+├── batch_test.go          # Batch operation tests
 ├── internal/
-│   └── testutil/      # Test helpers
+│   ├── cache/             # In-memory cache
+│   └── testutil/          # Test helpers
 ├── config/
 │   └── sec-keys.example.json  # API key config template
-└── Makefile           # Build tasks
+├── docs/
+│   └── v2-schemas/        # Sample responses + API.md
+├── examples/              # Usage examples
+└── Makefile               # Build tasks
 ```
 
 ## License
