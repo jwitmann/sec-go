@@ -228,6 +228,62 @@ GET /v2/fund/factsheet/performance
 
 ---
 
+### 16. Asset Allocation
+```
+GET /v2/fund/factsheet/asset-allocation
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| asset_seq | int | Asset sequence/order |
+| asset_name | string | Asset type name (Thai) |
+| asset_ratio | float | Allocation percentage |
+
+---
+
+### 21. Dividend History
+```
+GET /v2/fund/daily-info/dividend-history
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_dividend_date | date | Start dividend date (YYYY-MM-DD) |
+| end_dividend_date | date | End dividend date (YYYY-MM-DD) |
+| class_abbr_name | string | Filter by class abbreviation |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| unique_id | string | AMC identifier |
+| class_abbr_name | string | Class abbreviation |
+| book_close_date | datetime | Book close date |
+| dividend_date | datetime | Dividend payment date |
+| dividend_value | float | Dividend amount per unit |
+
+---
+
 ## Fund Status Values
 
 | Status | Description |

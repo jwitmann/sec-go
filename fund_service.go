@@ -283,3 +283,109 @@ type FactsheetOptions struct {
 	Latest        bool
 	FundClassName string
 }
+
+func (c *Client) GetDividendHistory(ctx context.Context, opts DividendHistoryOptions) ([]DividendHistory, string, error) {
+	params := url.Values{}
+	if opts.PageSize > 0 {
+		params.Set("page_size", strconv.Itoa(opts.PageSize))
+	}
+	if opts.Cursor != "" {
+		params.Set("next_cursor", opts.Cursor)
+	}
+	if opts.ProjID != "" {
+		params.Set("proj_id", opts.ProjID)
+	}
+	if !opts.StartDate.IsZero() {
+		params.Set("start_dividend_date", opts.StartDate.Format("2006-01-02"))
+	}
+	if !opts.EndDate.IsZero() {
+		params.Set("end_dividend_date", opts.EndDate.Format("2006-01-02"))
+	}
+	if opts.ClassAbbrName != "" {
+		params.Set("class_abbr_name", opts.ClassAbbrName)
+	}
+
+	path := "/v2/fund/daily-info/dividend-history"
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	data, err := c.Get(ctx, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("get dividend history: %w", err)
+	}
+
+	var response struct {
+		PaginatedResponse
+		Items []DividendHistory `json:"items"`
+	}
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, "", fmt.Errorf("unmarshal dividend history: %w", err)
+	}
+
+	return response.Items, response.NextCursor, nil
+}
+
+type DividendHistoryOptions struct {
+	PageSize      int
+	Cursor        string
+	ProjID        string
+	StartDate     time.Time
+	EndDate       time.Time
+	ClassAbbrName string
+}
+
+func (c *Client) GetAssetAllocation(ctx context.Context, opts AssetAllocationOptions) ([]AssetAllocation, string, error) {
+	params := url.Values{}
+	if opts.PageSize > 0 {
+		params.Set("page_size", strconv.Itoa(opts.PageSize))
+	}
+	if opts.Cursor != "" {
+		params.Set("next_cursor", opts.Cursor)
+	}
+	if opts.ProjID != "" {
+		params.Set("proj_id", opts.ProjID)
+	}
+	if !opts.StartDate.IsZero() {
+		params.Set("start_date", opts.StartDate.Format("2006-01-02"))
+	}
+	if !opts.EndDate.IsZero() {
+		params.Set("end_date", opts.EndDate.Format("2006-01-02"))
+	}
+	if opts.Latest {
+		params.Set("latest", "true")
+	}
+	if opts.FundClassName != "" {
+		params.Set("fund_class_name", opts.FundClassName)
+	}
+
+	path := "/v2/fund/factsheet/asset-allocation"
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	data, err := c.Get(ctx, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("get asset allocation: %w", err)
+	}
+
+	var response struct {
+		PaginatedResponse
+		Items []AssetAllocation `json:"items"`
+	}
+	if err := json.Unmarshal(data, &response); err != nil {
+		return nil, "", fmt.Errorf("unmarshal asset allocation: %w", err)
+	}
+
+	return response.Items, response.NextCursor, nil
+}
+
+type AssetAllocationOptions struct {
+	PageSize      int
+	Cursor        string
+	ProjID        string
+	StartDate     time.Time
+	EndDate       time.Time
+	Latest        bool
+	FundClassName string
+}

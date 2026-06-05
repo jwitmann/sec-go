@@ -96,3 +96,24 @@ type FactsheetPerformance struct {
 	PerformanceValue    float64   `json:"performance_value"`
 	LastUpdDate         time.Time `json:"last_upd_date"`
 }
+
+type DividendHistory struct {
+	ProjID        string    `json:"proj_id"`
+	UniqueID      string    `json:"unique_id"`
+	ClassAbbrName string    `json:"class_abbr_name"`
+	BookCloseDate string    `json:"book_close_date"`
+	DividendDate  string    `json:"dividend_date"`
+	DividendValue float64   `json:"dividend_value"`
+	LastUpdDate   time.Time `json:"last_upd_date"`
+}
+
+type AssetAllocation struct {
+	ProjID         string    `json:"proj_id"`
+	StartDate      string    `json:"start_date"`
+	EndDate        string    `json:"end_date"`
+	ProspectusType string    `json:"prospectus_type"`
+	AssetSeq       int       `json:"asset_seq"`
+	AssetName      string    `json:"asset_name"`
+	AssetRatio     float64   `json:"asset_ratio"`
+	LastUpdDate    time.Time `json:"last_upd_date"`
+}

@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/jwitmann/sec-go"
 	"github.com/jwitmann/sec-go/internal/testutil"
@@ -25,26 +24,13 @@ func main() {
 
 	ctx := context.Background()
 
-	fmt.Println("=== Phase 2: V2 Schema Discovery ===")
+	fmt.Println("=== Discovering Additional Endpoints ===")
 	fmt.Println()
 
-	// 1. AMCs
-	probeAndSave(ctx, client, "amcs", "/v2/fund/general-info/amcs?page_size=5")
+	probeAndSave(ctx, client, "dividend-history", "/v2/fund/daily-info/dividend-history?page_size=5")
+	probeAndSave(ctx, client, "asset-allocation", "/v2/fund/factsheet/asset-allocation?page_size=5")
 
-	// 2. Profiles
-	probeAndSave(ctx, client, "profiles", "/v2/fund/general-info/profiles?page_size=5")
-
-	// 3. Daily NAV (recent)
-	probeAndSave(ctx, client, "daily-nav-recent", "/v2/fund/daily-info/nav?page_size=5")
-
-	// 4. Daily NAV with date range
-	end := time.Now().Format("2006-01-02")
-	start := time.Now().AddDate(0, 0, -7).Format("2006-01-02")
-	probeAndSave(ctx, client, "daily-nav-range",
-		fmt.Sprintf("/v2/fund/daily-info/nav?start_nav_date=%s&end_nav_date=%s&page_size=5", start, end))
-
-	fmt.Println("=== Discovery Complete ===")
-	fmt.Println("Saved responses to docs/v2-schemas/")
+	fmt.Println("=== Done ===")
 }
 
 func probeAndSave(ctx context.Context, client *sec.Client, name, path string) {
