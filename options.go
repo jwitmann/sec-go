@@ -74,3 +74,9 @@ func WithResponseHook(hook ResponseHook) Option {
 		c.responseHook = hook
 	}
 }
+
+func WithLanguage(lang Language) Option {
+	return func(c *Client) {
+		c.language = normalizeLanguage(lang)
+	}
+}

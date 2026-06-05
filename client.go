@@ -50,6 +50,7 @@ type Client struct {
 	logger       logger
 	requestHook  RequestHook
 	responseHook ResponseHook
+	language     Language
 }
 
 func NewClient(apiKey string, opts ...Option) (*Client, error) {
@@ -66,6 +67,7 @@ func NewClient(apiKey string, opts ...Option) (*Client, error) {
 		rateLimiter: NewRateLimiter(),
 		retryCfg:    defaultRetryConfig(),
 		logger:      noopLogger{},
+		language:    LanguageEnglish,
 	}
 
 	for _, opt := range opts {
@@ -102,6 +104,12 @@ func (c *Client) currentKey() string {
 		return c.secondaryKey
 	}
 	return c.primaryKey
+}
+
+func (c *Client) Language() Language {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.language
 }
 
 func (c *Client) do(ctx context.Context, method, path string, body io.Reader) (*http.Response, error) {

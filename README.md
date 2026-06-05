@@ -82,6 +82,7 @@ client, err := sec.NewClient(
     sec.WithResponseHook(func(req *http.Request, resp *http.Response, err error) {
         // e.g., record metrics
     }),
+    sec.WithLanguage(sec.LanguageThai),
 )
 ```
 
@@ -170,6 +171,39 @@ Retry behavior:
 - Retries on: 429, 500, 502, 503, 504, network errors
 - Does not retry on: 400, 401, 403, 404
 - Special handling for HTTP 421 with `Retry-After` header
+
+## Language Support
+
+The SEC API returns bilingual fields (e.g., `proj_name_th` + `proj_name_en`) and some Thai-only fields. Use `WithLanguage` to set a client-wide preference, then use helper methods to pick the right value:
+
+```go
+client, err := sec.NewClient("key", sec.WithLanguage(sec.LanguageThai))
+
+profile := profiles[0]
+fmt.Println(profile.Name(client.Language()))      // Thai or English fund name
+fmt.Println(profile.CompanyName(client.Language())) // Thai or English AMC name
+```
+
+For Thai-only fields, use translation helpers (similar to finnomena-go):
+
+```go
+fees, _, _ := client.GetMutualFundFees(ctx, sec.FeeOptions{})
+sec.TranslateAllFees(fees, true) // true = use English
+
+for _, fee := range fees {
+    fmt.Println(fee.FeeTypeDesc) // "Management Fee" instead of "ค่าธรรมเนียมการจัดการ"
+}
+```
+
+Supported translations:
+- `TranslateFee` / `TranslateAllFees` — fee types and units
+- `TranslateFactsheetFee` / `TranslateAllFactsheetFees`
+- `TranslateAssetAllocation` / `TranslateAllAssetAllocations`
+- `TranslateTop5Holding` / `TranslateAllTop5Holdings`
+- `TranslateQuarterlyPortfolio` / `TranslateAllQuarterlyPortfolios`
+- `TranslateMonthlyPortfolioAssetType` / `TranslateAllMonthlyPortfolioAssetTypes`
+
+Extend the public `FeeTypeTranslation`, `FeeUnitTranslation`, `AssetNameTranslation`, and `AssetLiabilityTranslation` maps to add more translations as you discover them.
 
 ## CLI Tool
 
