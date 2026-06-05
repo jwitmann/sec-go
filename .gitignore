@@ -1,8 +1,8 @@
 /config/sec-keys.json
 /bin/
-*.test
-*.out
-.DS_Store
-vendor/
-.idea/
-.vscode/
+/*.test
+/*.out
+/.DS_Store
+/vendor/
+/.idea/
+/.vscode/
