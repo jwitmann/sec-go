@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const defaultMinDelay = 100 * time.Millisecond
+const defaultMinDelay = 16 * time.Millisecond
 
 type RateLimiter interface {
 	Wait(ctx context.Context) error

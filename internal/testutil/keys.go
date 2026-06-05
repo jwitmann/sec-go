@@ -12,7 +12,20 @@ type TestKeys struct {
 }
 
 func LoadTestKeys() (*TestKeys, error) {
-	data, err := os.ReadFile("../../config/sec-keys.json")
+	paths := []string{
+		"config/sec-keys.json",
+		"../../config/sec-keys.json",
+		"../../../config/sec-keys.json",
+	}
+
+	var data []byte
+	var err error
+	for _, path := range paths {
+		data, err = os.ReadFile(path)
+		if err == nil {
+			break
+		}
+	}
 	if err != nil {
 		return nil, fmt.Errorf("read config/sec-keys.json: %w", err)
 	}

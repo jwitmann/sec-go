@@ -1,0 +1,72 @@
+{
+  "message": "success",
+  "page_size": 5,
+  "next_cursor": "NXwzdHhJd08wdTU3UUNPQzU5YTNJWVNZRi81WWFNTE1pejg3TWZPai9zMnNJPQ==",
+  "items": [
+    {
+      "proj_id": "M0292_2562",
+      "unique_id": "C0000033452",
+      "fund_class_name": "main",
+      "nav_date": "2023-01-03",
+      "net_asset": 201191584.34,
+      "last_val": 10.2673,
+      "sell_price": 10.2828,
+      "buy_price": 10.2519,
+      "sell_swap_price": 10.2519,
+      "buy_swap_price": 10.2828,
+      "last_upd_date": "2024-10-31T15:34:11.367"
+    },
+    {
+      "proj_id": "M0367_2564",
+      "unique_id": "C0000033452",
+      "fund_class_name": "main",
+      "nav_date": "2024-01-02",
+      "net_asset": 26718867.74,
+      "last_val": 4.6255,
+      "sell_price": 4.6256,
+      "buy_price": 4.6255,
+      "sell_swap_price": 4.6255,
+      "buy_swap_price": 4.6256,
+      "last_upd_date": "2024-10-31T15:34:11.367"
+    },
+    {
+      "proj_id": "M0504_2559",
+      "unique_id": "C0000006646",
+      "fund_class_name": "LHSTPLUS-A",
+      "nav_date": "2025-01-30",
+      "net_asset": 1002586944.0,
+      "last_val": 11.1129,
+      "sell_price": 11.113,
+      "buy_price": 11.1129,
+      "sell_swap_price": 11.1129,
+      "buy_swap_price": 11.113,
+      "last_upd_date": "2026-04-21T14:05:16.773"
+    },
+    {
+      "proj_id": "M0529_2559",
+      "unique_id": "C0000000290",
+      "fund_class_name": "main",
+      "nav_date": "2023-07-31",
+      "net_asset": 369725893.95,
+      "last_val": 10.253,
+      "sell_price": 10.2531,
+      "buy_price": 10.2274,
+      "sell_swap_price": 10.2274,
+      "buy_swap_price": 10.2531,
+      "last_upd_date": "2024-10-31T15:34:11.367"
+    },
+    {
+      "proj_id": "M0593_2558",
+      "unique_id": "C0000000239",
+      "fund_class_name": "main",
+      "nav_date": "2022-06-21",
+      "net_asset": 1004693482.81,
+      "last_val": 13.0311,
+      "sell_price": 13.0312,
+      "buy_price": 13.0311,
+      "sell_swap_price": 13.0311,
+      "buy_swap_price": 13.0312,
+      "last_upd_date": "2024-10-31T15:34:11.367"
+    }
+  ]
+}

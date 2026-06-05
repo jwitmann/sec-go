@@ -4,6 +4,7 @@ import (
 	"context"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -57,6 +58,15 @@ func shouldRetry(err error, statusCode int) bool {
 	return IsRetryable(statusCode)
 }
 
+func parseRetryAfter(resp *http.Response) time.Duration {
+	if ra := resp.Header.Get("Retry-After"); ra != "" {
+		if seconds, err := strconv.Atoi(ra); err == nil {
+			return time.Duration(seconds) * time.Second
+		}
+	}
+	return 0
+}
+
 func doWithRetry(ctx context.Context, rc retryConfig, do func() (*http.Response, error)) (*http.Response, error) {
 	var lastErr error
 	var lastStatusCode int
@@ -83,6 +93,20 @@ func doWithRetry(ctx context.Context, rc retryConfig, do func() (*http.Response,
 
 		lastStatusCode = resp.StatusCode
 		lastErr = &APIError{StatusCode: resp.StatusCode, Message: resp.Status}
+
+		if resp.StatusCode == 421 {
+			if delay := parseRetryAfter(resp); delay > 0 {
+				resp.Body.Close()
+				timer := time.NewTimer(delay)
+				defer timer.Stop()
+				select {
+				case <-ctx.Done():
+					return nil, ctx.Err()
+				case <-timer.C:
+				}
+				continue
+			}
+		}
 
 		if !shouldRetry(nil, resp.StatusCode) {
 			return nil, lastErr

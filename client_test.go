@@ -99,7 +99,7 @@ func TestClientRateLimiting(t *testing.T) {
 	if requestCount != 2 {
 		t.Errorf("expected 2 requests, got %d", requestCount)
 	}
-	if elapsed < 90*time.Millisecond {
+	if elapsed < 10*time.Millisecond {
 		t.Error("rate limiting not enforced")
 	}
 }

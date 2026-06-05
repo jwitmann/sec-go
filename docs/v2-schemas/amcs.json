@@ -1,0 +1,37 @@
+{
+  "message": "success",
+  "page_size": 5,
+  "next_cursor": "NXwzdHhJd08wdTU3UUNPQzU5YTNJWVNZRi81WWFNTE1pejg3TWZPai9zMnNJPQ==",
+  "items": [
+    {
+      "unique_id": "C0000000569",
+      "comp_name_en": "ONE ASSET MANAGEMENT LIMITED",
+      "comp_name_th": "บริษัทหลักทรัพย์จัดการกองทุน วรรณ จำกัด",
+      "last_upd_date": "2026-06-05T15:15:05.93"
+    },
+    {
+      "unique_id": "C0000021747",
+      "comp_name_en": "BANGKOK CAPITAL ASSET MANAGEMENT COMPANY LIMITED",
+      "comp_name_th": "บริษัทหลักทรัพย์จัดการกองทุน บางกอกแคปปิตอล จำกัด",
+      "last_upd_date": "2026-06-05T15:15:05.93"
+    },
+    {
+      "unique_id": "C0000000460",
+      "comp_name_en": "KRUNG THAI ASSET MANAGEMENT PUBLIC COMPANY LIMITED ",
+      "comp_name_th": "บริษัทหลักทรัพย์จัดการกองทุน กรุงไทย จำกัด (มหาชน)",
+      "last_upd_date": "2026-06-05T15:15:05.93"
+    },
+    {
+      "unique_id": "C0000000623",
+      "comp_name_en": "UOB ASSET MANAGEMENT (THAILAND) COMPANY LIMITED",
+      "comp_name_th": "บริษัทหลักทรัพย์จัดการกองทุน ยูโอบี (ประเทศไทย) จำกัด",
+      "last_upd_date": "2026-06-05T15:15:05.93"
+    },
+    {
+      "unique_id": "C0000006646",
+      "comp_name_en": "LAND AND HOUSES FUND MANAGEMENT COMPANY LIMITED",
+      "comp_name_th": "บริษัทหลักทรัพย์จัดการกองทุน แลนด์ แอนด์ เฮ้าส์ จำกัด",
+      "last_upd_date": "2026-06-05T15:15:05.93"
+    }
+  ]
+}

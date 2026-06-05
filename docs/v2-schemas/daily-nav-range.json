@@ -1,0 +1,72 @@
+{
+  "message": "success",
+  "page_size": 5,
+  "next_cursor": "MTk1OHw2VlVwb05vK0lwVFEvMWswNzhmY01YRzkzbDFIU1ZOUW5PbmpDOTd2RUJBPQ==",
+  "items": [
+    {
+      "proj_id": "M0124_2558",
+      "unique_id": "C0000000460",
+      "fund_class_name": "KT-ASEAN-SSF",
+      "nav_date": "2026-06-02",
+      "net_asset": 6441182.17,
+      "last_val": 13.0442,
+      "sell_price": 13.0443,
+      "buy_price": 13.0442,
+      "sell_swap_price": 13.0442,
+      "buy_swap_price": 13.0443,
+      "last_upd_date": "2026-06-05T15:08:32.48"
+    },
+    {
+      "proj_id": "M0155_2569",
+      "unique_id": "C0000000023",
+      "fund_class_name": "main",
+      "nav_date": "2026-06-02",
+      "net_asset": 970970375.92,
+      "last_val": 19.6995,
+      "sell_price": 19.9951,
+      "buy_price": 19.6995,
+      "sell_swap_price": 19.6995,
+      "buy_swap_price": 19.9951,
+      "last_upd_date": "2026-06-05T15:08:32.48"
+    },
+    {
+      "proj_id": "M0651_2566",
+      "unique_id": "C0000005022",
+      "fund_class_name": "ASP-USSMALL-A",
+      "nav_date": "2026-05-29",
+      "net_asset": 359916082.25,
+      "last_val": 10.0698,
+      "sell_price": 10.2209,
+      "buy_price": 10.0698,
+      "sell_swap_price": 10.0698,
+      "buy_swap_price": 10.2209,
+      "last_upd_date": "2026-06-05T15:08:32.48"
+    },
+    {
+      "proj_id": "M0554_2566",
+      "unique_id": "C0000000709",
+      "fund_class_name": "KF-SINCOME-FX-I",
+      "nav_date": "2026-06-02",
+      "net_asset": 162965001.35,
+      "last_val": 10.9472,
+      "sell_price": 10.9473,
+      "buy_price": 10.9472,
+      "sell_swap_price": 10.9472,
+      "buy_swap_price": 10.9473,
+      "last_upd_date": "2026-06-05T15:08:32.48"
+    },
+    {
+      "proj_id": "M0799_2566",
+      "unique_id": "C0000000021",
+      "fund_class_name": "K-TNZ-ThaiESG",
+      "nav_date": "2026-06-04",
+      "net_asset": 5739025472.45,
+      "last_val": 12.5147,
+      "sell_price": 12.5148,
+      "buy_price": 12.5147,
+      "sell_swap_price": 0.0,
+      "buy_swap_price": 0.0,
+      "last_upd_date": "2026-06-05T15:08:32.48"
+    }
+  ]
+}

@@ -106,6 +106,10 @@ func (c *Client) do(ctx context.Context, method, path string, body io.Reader) (*
 	})
 }
 
+func (c *Client) Get(ctx context.Context, path string) ([]byte, error) {
+	return c.get(ctx, path)
+}
+
 func (c *Client) get(ctx context.Context, path string) ([]byte, error) {
 	if c.cacheEnabled && c.cache != nil {
 		if data, ok := c.cache.Get(path); ok {
@@ -133,6 +137,10 @@ func (c *Client) get(ctx context.Context, path string) ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+func (c *Client) Post(ctx context.Context, path string, payload []byte) ([]byte, error) {
+	return c.post(ctx, path, payload)
 }
 
 func (c *Client) post(ctx context.Context, path string, payload []byte) ([]byte, error) {
