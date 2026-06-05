@@ -83,7 +83,9 @@ client, err := sec.NewClient(
 ### General Info
 - `ListAMCs` — `/v2/fund/general-info/amcs`
 - `GetFundProfiles` — `/v2/fund/general-info/profiles`
+- `GetFundSpecifications` — `/v2/fund/general-info/specifications`
 - `GetMutualFundFees` — `/v2/fund/general-info/mutual-fund-fees`
+- `GetFundInvolveParties` — `/v2/fund/general-info/involve-parties`
 
 ### Daily Info
 - `GetDailyNAV` — `/v2/fund/daily-info/nav`
@@ -92,6 +94,12 @@ client, err := sec.NewClient(
 ### Factsheet
 - `GetFactsheetFees` — `/v2/fund/factsheet/fees`
 - `GetFactsheetPerformance` — `/v2/fund/factsheet/performance`
+- `GetFactsheetSubscriptionRedemptionMinimums` — `/v2/fund/factsheet/subscription-redemption-minimums`
+- `GetFactsheetSubscriptionRedemptionPeriods` — `/v2/fund/factsheet/subscription-redemption-periods`
+- `GetFactsheetStatistics` — `/v2/fund/factsheet/statistics`
+- `GetFactsheetBenchmarks` — `/v2/fund/factsheet/benchmarks`
+- `GetFundFactsheetURLs` — `/v2/fund/factsheet/urls`
+- `GetFundIPOs` — `/v2/fund/factsheet/ipos`
 - `GetAssetAllocation` — `/v2/fund/factsheet/asset-allocation`
 - `GetRiskSpectrum` — `/v2/fund/factsheet/risk-spectrum`
 - `GetTop5Holdings` — `/v2/fund/factsheet/top5-holdings`

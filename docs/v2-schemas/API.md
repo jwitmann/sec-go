@@ -136,6 +136,46 @@ GET /v2/fund/general-info/mutual-fund-fees
 
 ---
 
+### 5. Fund Involve Parties
+```
+GET /v2/fund/general-info/involve-parties
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Project number |
+| entity_type | string | Entity type code (A, U, S, R, V, M, O, P, K, N, F) |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| entity_type | string | Entity type code |
+| entity_name_th | string | Name in Thai |
+| entity_name_en | string | Name in English |
+| address | string | Address |
+| last_upd_date | datetime | Last update timestamp |
+
+**Entity Type Values:**
+| Code | Description |
+|------|-------------|
+| A | Auditor |
+| U | Underwriter |
+| S | Selling Agent |
+| R | Registrar |
+| V | Mutual Fund Supervisor / Trustee |
+| M | Investment Solicitor / Advisor |
+| O | Outsource Company (Investment Management) |
+| P | Private Equity / Professional Investor |
+| K | Market Maker |
+| N | Financial Advisor |
+| F | Fund Manager |
+
+---
+
 ## Daily Information Endpoints
 
 ### 20. Daily Fund NAV
@@ -196,6 +236,198 @@ GET /v2/fund/factsheet/fees
 | fee_type_desc | string | Front-end Fee, Back-end Fee, etc. |
 | rate | float | Specified rate |
 | actual_value | float | Actual charged rate |
+
+---
+
+### 6. Fund Factsheet URLs
+```
+GET /v2/fund/factsheet/urls
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Project number |
+| fund_class_name | string | Fund class name |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| fund_class_name | string | Fund class |
+| prospectus_type | string | Factsheet frequency |
+| amc_url_factsheet | string | URL on AMC website |
+| pdf_factsheet | string | PDF URL hosted by SEC |
+| as_of_date | date | Reference date |
+| last_upd_date | datetime | Last update timestamp |
+
+---
+
+### 7. IPO Offering Period
+```
+GET /v2/fund/factsheet/ipos
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| first_sell_start_date | string | IPO start date |
+| first_sell_end_date | string | IPO end date |
+| last_upd_date | datetime | Last update timestamp |
+
+---
+
+### 8. Fund Benchmark
+```
+GET /v2/fund/factsheet/benchmarks
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| group_seq | int | Group sequence number |
+| benchmark | string | Benchmark index |
+| benchmark_remark | string | Remark |
+| last_upd_date | datetime | Last update timestamp |
+
+---
+
+### 9. Subscription/Redemption Minimums
+```
+GET /v2/fund/factsheet/subscription-redemption-minimums
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| fund_class_name | string | Fund class |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| minimum_sub_ipo | float | Minimum initial subscription amount |
+| minimum_sub_ipo_cur | string | Currency for minimum initial subscription |
+| minimum_sub | float | Minimum subsequent subscription amount |
+| minimum_sub_cur | string | Currency for minimum subsequent subscription |
+| minimum_sub_unit | string | Minimum subscription units |
+| minimum_redempt | float | Minimum redemption amount |
+| minimum_redempt_cur | string | Currency for minimum redemption |
+| minimum_redempt_unit | string | Minimum redemption units |
+| lowbal_val | float | Minimum remaining balance amount |
+| lowbal_val_cur | string | Currency for minimum balance |
+| lowbal_unit | string | Minimum remaining unit balance |
+| last_upd_date | datetime | Last update timestamp |
+
+---
+
+### 10. Subscription/Redemption Periods
+```
+GET /v2/fund/factsheet/subscription-redemption-periods
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| fund_class_name | string | Fund class |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| type | string | Transaction type (subscription or redemption) |
+| period | string | Subscription/redemption period |
+| redemp_period_oth | string | Additional description if period is 'Other' |
+| settlement_period | string | Settlement period for redemption payment |
+| last_upd_date | datetime | Last update timestamp |
+
+---
+
+### 12. Fund Statistics
+```
+GET /v2/fund/factsheet/statistics
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| fund_class_name | string | Fund class |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| portfolio_turnover_ratio | string | Portfolio Turnover Ratio |
+| recovering_period | string | Recovering Period |
+| portfolio_duration_period | string | Portfolio Duration for bond funds |
+| maximum_drawdown | string | Maximum drawdown over past 5 years |
+| sharpe_ratio | string | Sharpe Ratio (equity funds) |
+| beta | string | Beta (equity funds) |
+| alpha | string | Alpha (equity funds) |
+| fx_hedging | string | FX Hedging |
+| tracking_error | string | Tracking Error |
+| yield_to_maturity | string | Yield to Maturity |
+| last_upd_date | datetime | Last update timestamp |
 
 ---
 

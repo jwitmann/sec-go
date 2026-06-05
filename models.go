@@ -161,3 +161,103 @@ type MonthlyPortfolioAssetType struct {
 	MarketValue   float64 `json:"market_value"`
 	PercentNAV    float64 `json:"percent_nav"`
 }
+
+type FactsheetSubscriptionRedemptionMinimum struct {
+	ProjID             string    `json:"proj_id"`
+	FundClassName      string    `json:"fund_class_name"`
+	StartDate          string    `json:"start_date"`
+	EndDate            string    `json:"end_date"`
+	ProspectusType     string    `json:"prospectus_type"`
+	MinimumSubIPO      float64   `json:"minimum_sub_ipo"`
+	MinimumSubIPOCur   string    `json:"minimum_sub_ipo_cur"`
+	MinimumSub         float64   `json:"minimum_sub"`
+	MinimumSubCur      string    `json:"minimum_sub_cur"`
+	MinimumSubUnit     string    `json:"minimum_sub_unit"`
+	MinimumRedempt     float64   `json:"minimum_redempt"`
+	MinimumRedemptCur  string    `json:"minimum_redempt_cur"`
+	MinimumRedemptUnit string    `json:"minimum_redempt_unit"`
+	LowbalVal          float64   `json:"lowbal_val"`
+	LowbalValCur       string    `json:"lowbal_val_cur"`
+	LowbalUnit         string    `json:"lowbal_unit"`
+	LastUpdDate        time.Time `json:"last_upd_date"`
+}
+
+type FactsheetStatistics struct {
+	ProjID                  string    `json:"proj_id"`
+	FundClassName           string    `json:"fund_class_name"`
+	StartDate               string    `json:"start_date"`
+	EndDate                 string    `json:"end_date"`
+	ProspectusType          string    `json:"prospectus_type"`
+	PortfolioTurnoverRatio  string    `json:"portfolio_turnover_ratio"`
+	RecoveringPeriod        string    `json:"recovering_period"`
+	PortfolioDurationPeriod string    `json:"portfolio_duration_period"`
+	MaximumDrawdown         string    `json:"maximum_drawdown"`
+	SharpeRatio             string    `json:"sharpe_ratio"`
+	Beta                    string    `json:"beta"`
+	Alpha                   string    `json:"alpha"`
+	FXHedging               string    `json:"fx_hedging"`
+	TrackingError           string    `json:"tracking_error"`
+	YieldToMaturity         string    `json:"yield_to_maturity"`
+	LastUpdDate             time.Time `json:"last_upd_date"`
+}
+
+type FactsheetSubscriptionRedemptionPeriod struct {
+	ProjID           string    `json:"proj_id"`
+	FundClassName    string    `json:"fund_class_name"`
+	StartDate        string    `json:"start_date"`
+	EndDate          string    `json:"end_date"`
+	ProspectusType   string    `json:"prospectus_type"`
+	Type             string    `json:"type"`
+	Period           string    `json:"period"`
+	RedempPeriodOth  string    `json:"redemp_period_oth"`
+	SettlementPeriod string    `json:"settlement_period"`
+	LastUpdDate      time.Time `json:"last_upd_date"`
+}
+
+type FundSpecification struct {
+	ProjID        string    `json:"proj_id"`
+	FundClassName string    `json:"fund_class_name"`
+	SpecCode      string    `json:"spec_code"`
+	SpecDesc      string    `json:"spec_desc"`
+	LastUpdDate   time.Time `json:"last_upd_date"`
+}
+
+type FactsheetBenchmark struct {
+	ProjID         string    `json:"proj_id"`
+	StartDate      string    `json:"start_date"`
+	EndDate        string    `json:"end_date"`
+	ProspectusType string    `json:"prospectus_type"`
+	GroupSeq       int       `json:"group_seq"`
+	Benchmark      string    `json:"benchmark"`
+	Remark         string    `json:"benchmark_remark"`
+	LastUpdDate    time.Time `json:"last_upd_date"`
+}
+
+type FundInvolveParty struct {
+	ProjID       string    `json:"proj_id"`
+	EntityType   string    `json:"entity_type"`
+	EntityNameTH string    `json:"entity_name_th"`
+	EntityNameEN string    `json:"entity_name_en"`
+	Address      string    `json:"address"`
+	LastUpdDate  time.Time `json:"last_upd_date"`
+}
+
+type FundFactsheetURL struct {
+	ProjID          string    `json:"proj_id"`
+	FundClassName   string    `json:"fund_class_name"`
+	ProspectusType  string    `json:"prospectus_type"`
+	AMCURLFactsheet string    `json:"amc_url_factsheet"`
+	PDFFactsheet    string    `json:"pdf_factsheet"`
+	AsOfDate        string    `json:"as_of_date"`
+	LastUpdDate     time.Time `json:"last_upd_date"`
+}
+
+type FundIPO struct {
+	ProjID             string    `json:"proj_id"`
+	StartDate          string    `json:"start_date"`
+	EndDate            string    `json:"end_date"`
+	ProspectusType     string    `json:"prospectus_type"`
+	FirstSellStartDate string    `json:"first_sell_start_date"`
+	FirstSellEndDate   string    `json:"first_sell_end_date"`
+	LastUpdDate        time.Time `json:"last_upd_date"`
+}
