@@ -40,10 +40,20 @@ func buildOutstandingQuery(opts OutstandingOptions) string {
 
 func (c *Client) GetQuarterlyPortfolio(ctx context.Context, opts OutstandingOptions) ([]QuarterlyPortfolio, string, error) {
 	path := "/v2/fund/outstanding/portfolio" + buildOutstandingQuery(opts)
-	return fetchPaginated[QuarterlyPortfolio](ctx, c, path, "get quarterly portfolio")
+	items, cursor, err := fetchPaginated[QuarterlyPortfolio](ctx, c, path, "get quarterly portfolio")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateQuarterlyPortfolios(items)
+	return items, cursor, nil
 }
 
 func (c *Client) GetMonthlyPortfolioAssetType(ctx context.Context, opts OutstandingOptions) ([]MonthlyPortfolioAssetType, string, error) {
 	path := "/v2/fund/outstanding/portfolio-asset-type" + buildOutstandingQuery(opts)
-	return fetchPaginated[MonthlyPortfolioAssetType](ctx, c, path, "get monthly portfolio asset type")
+	items, cursor, err := fetchPaginated[MonthlyPortfolioAssetType](ctx, c, path, "get monthly portfolio asset type")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateMonthlyPortfolioAssetTypes(items)
+	return items, cursor, nil
 }

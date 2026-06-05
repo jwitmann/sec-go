@@ -203,3 +203,48 @@ func (c *Client) post(ctx context.Context, path string, payload []byte) ([]byte,
 
 	return data, nil
 }
+
+// auto-translate helpers: when client language is English, translate Thai
+// descriptions in-place so callers receive English results transparently.
+
+func (c *Client) autoTranslateFees(fees []MutualFundFee) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllFees(fees, true)
+}
+
+func (c *Client) autoTranslateFactsheetFees(fees []FactsheetFee) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllFactsheetFees(fees, true)
+}
+
+func (c *Client) autoTranslateAssetAllocations(allocs []AssetAllocation) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllAssetAllocations(allocs, true)
+}
+
+func (c *Client) autoTranslateTop5Holdings(holdings []Top5Holding) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllTop5Holdings(holdings, true)
+}
+
+func (c *Client) autoTranslateQuarterlyPortfolios(items []QuarterlyPortfolio) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllQuarterlyPortfolios(items, true)
+}
+
+func (c *Client) autoTranslateMonthlyPortfolioAssetTypes(items []MonthlyPortfolioAssetType) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllMonthlyPortfolioAssetTypes(items, true)
+}

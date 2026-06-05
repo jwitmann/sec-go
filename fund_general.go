@@ -57,7 +57,12 @@ func (c *Client) GetMutualFundFees(ctx context.Context, opts FeeOptions) ([]Mutu
 	}
 
 	path := buildPath("/v2/fund/general-info/mutual-fund-fees", params)
-	return fetchPaginated[MutualFundFee](ctx, c, path, "get mutual fund fees")
+	fees, cursor, err := fetchPaginated[MutualFundFee](ctx, c, path, "get mutual fund fees")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateFees(fees)
+	return fees, cursor, nil
 }
 
 func (c *Client) GetFundSpecifications(ctx context.Context, opts FeeOptions) ([]FundSpecification, string, error) {

@@ -68,7 +68,12 @@ func (c *Client) GetFundIPOs(ctx context.Context, opts FactsheetOptions) ([]Fund
 
 func (c *Client) GetFactsheetFees(ctx context.Context, opts FactsheetOptions) ([]FactsheetFee, string, error) {
 	path := "/v2/fund/factsheet/fees" + buildFactsheetQuery(opts)
-	return fetchPaginated[FactsheetFee](ctx, c, path, "get factsheet fees")
+	fees, cursor, err := fetchPaginated[FactsheetFee](ctx, c, path, "get factsheet fees")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateFactsheetFees(fees)
+	return fees, cursor, nil
 }
 
 func (c *Client) GetFactsheetPerformance(ctx context.Context, opts FactsheetOptions) ([]FactsheetPerformance, string, error) {
@@ -103,7 +108,12 @@ func (c *Client) GetFactsheetBenchmarks(ctx context.Context, opts FactsheetOptio
 
 func (c *Client) GetAssetAllocation(ctx context.Context, opts FactsheetOptions) ([]AssetAllocation, string, error) {
 	path := "/v2/fund/factsheet/asset-allocation" + buildFactsheetQuery(opts)
-	return fetchPaginated[AssetAllocation](ctx, c, path, "get asset allocation")
+	allocs, cursor, err := fetchPaginated[AssetAllocation](ctx, c, path, "get asset allocation")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateAssetAllocations(allocs)
+	return allocs, cursor, nil
 }
 
 func (c *Client) GetRiskSpectrum(ctx context.Context, opts FactsheetOptions) ([]RiskSpectrum, string, error) {
@@ -113,5 +123,10 @@ func (c *Client) GetRiskSpectrum(ctx context.Context, opts FactsheetOptions) ([]
 
 func (c *Client) GetTop5Holdings(ctx context.Context, opts FactsheetOptions) ([]Top5Holding, string, error) {
 	path := "/v2/fund/factsheet/top5-holdings" + buildFactsheetQuery(opts)
-	return fetchPaginated[Top5Holding](ctx, c, path, "get top 5 holdings")
+	holdings, cursor, err := fetchPaginated[Top5Holding](ctx, c, path, "get top 5 holdings")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateTop5Holdings(holdings)
+	return holdings, cursor, nil
 }
