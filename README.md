@@ -75,6 +75,13 @@ client, err := sec.NewClient(
     sec.WithRetryDelay(200*time.Millisecond),
     sec.WithBaseURL("https://custom.api.sec.or.th"),
     sec.WithCache(cache, 5*time.Minute),
+    sec.WithLogger(log.New(os.Stdout, "[sec] ", log.LstdFlags)),
+    sec.WithRequestHook(func(req *http.Request) {
+        // e.g., add tracing headers
+    }),
+    sec.WithResponseHook(func(req *http.Request, resp *http.Response, err error) {
+        // e.g., record metrics
+    }),
 )
 ```
 
@@ -164,6 +171,20 @@ Retry behavior:
 - Does not retry on: 400, 401, 403, 404
 - Special handling for HTTP 421 with `Retry-After` header
 
+## CLI Tool
+
+A command-line tool is included for ad-hoc API queries:
+
+```bash
+go run ./cmd/sec-cli amcs
+go run ./cmd/sec-cli profiles --company-info C0000000021
+go run ./cmd/sec-cli nav --proj-id M0000_2552 --start 2024-01-01 --end 2024-01-31
+go run ./cmd/sec-cli benchmarks --proj-id M0000_2552 --latest
+go run ./cmd/sec-cli factsheet-urls --proj-id M0000_2552
+```
+
+The CLI reads API keys from `config/sec-keys.json` or falls back to the `SEC_API_KEY` environment variable.
+
 ## Examples
 
 See `examples/`:
@@ -197,7 +218,7 @@ sec-go/
 ├── error.go               # Error types
 ├── rate.go                # Rate limiter
 ├── retry.go               # Retry logic
-├── fund_service.go        # Fund API service methods
+├── fund_service.go        # Fund API service methods (all 21 endpoints)
 ├── models.go              # V2 response models
 ├── pagination.go          # Pagination helpers
 ├── batch.go               # Batch/concurrent operations
@@ -205,11 +226,14 @@ sec-go/
 ├── fund_service_test.go   # Service method tests
 ├── pagination_test.go     # Pagination tests
 ├── batch_test.go          # Batch operation tests
+├── integration_test.go    # Real API integration tests
 ├── internal/
 │   ├── cache/             # In-memory cache
 │   └── testutil/          # Test helpers
 ├── config/
 │   └── sec-keys.example.json  # API key config template
+├── cmd/
+│   └── sec-cli/           # CLI tool for ad-hoc queries
 ├── docs/
 │   └── v2-schemas/        # Sample responses + API.md
 ├── examples/              # Usage examples

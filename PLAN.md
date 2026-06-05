@@ -18,7 +18,7 @@ sec-go/
 ├── rate.go                # Rate limiter
 ├── retry.go               # Retry logic
 ├── helpers.go             # Utility helpers
-├── fund_service.go        # V2 Fund API methods
+├── fund_service.go        # V2 Fund API methods (all 21 endpoints)
 ├── models.go              # V2 data models
 ├── pagination.go          # Pagination helper (FetchAllPages)
 ├── batch.go               # Concurrent batch operations
@@ -27,6 +27,7 @@ sec-go/
 ├── fund_service_test.go   # Service method tests
 ├── pagination_test.go     # Pagination tests
 ├── batch_test.go          # Batch operation tests
+├── integration_test.go    # Real API integration tests (build tag: integration)
 │
 ├── internal/
 │   ├── cache/             # Optional in-memory cache
@@ -43,10 +44,14 @@ sec-go/
 │   ├── batch/             # Fetch NAV range for multiple funds
 │   └── thaifa/            # THAIFA fallback pattern
 │
+├── cmd/
+│   └── sec-cli/           # CLI tool for ad-hoc API queries
+│
 ├── go.mod
 ├── go.sum
 ├── Makefile
 ├── README.md
+├── AGENTS.md
 └── PLAN.md                # This document
 ```
 
@@ -58,11 +63,12 @@ sec-go/
 
 **Deliverables:**
 - `client.go` — Core HTTP client with auth, retry, rate limiting
-- `options.go` — Functional options (HTTP client, base URL, secondary key, rate limiter, retries, timeout, cache)
+- `options.go` — Functional options (HTTP client, base URL, secondary key, rate limiter, retries, timeout, cache, logger, request hook)
 - `error.go` — Custom error types (`APIError`, `ErrRateLimited`, `ErrNotFound`, `ErrUnauthorized`)
 - `rate.go` — Thread-safe rate limiter with 16ms minimum delay
 - `retry.go` — Exponential backoff with jitter, handles HTTP 421 + `Retry-After`
 - `client_test.go` — Mock server tests for auth, rate limiting, retry, errors, options, POST
+- `ClientFromEnv()` — Helper that reads `SEC_API_KEY` from environment
 
 ---
 
@@ -78,31 +84,48 @@ sec-go/
 - Rate limit from SEC docs: 5,000 requests / 300 seconds, minimum 16ms between requests
 
 **Deliverables:**
-- Complete endpoint inventory in `docs/v2-schemas/API.md`
-- Sample JSON responses in `docs/v2-schemas/` for all working endpoints
+- Complete endpoint inventory in `docs/v2-schemas/API.md` (all 21 endpoints, sorted by category)
+- Sample JSON responses in `docs/v2-schemas/` for discovered endpoints
 - Test key infrastructure: `config/sec-keys.example.json` + `internal/testutil/keys.go`
 
 ---
 
 ## Phase 3: V2 Endpoint Implementation ✅ COMPLETE
 
-**Goal:** Build typed Go methods for all discovered V2 endpoints.
+**Goal:** Build typed Go methods for all 21 discovered V2 endpoints.
 
-**Models added:** `AMC`, `FundProfile`, `DailyNAV`, `MutualFundFee`, `FactsheetFee`, `FactsheetPerformance`, `DividendHistory`, `AssetAllocation`, `RiskSpectrum`, `Top5Holding`, `QuarterlyPortfolio`, `MonthlyPortfolioAssetType`.
+**Models added:** `AMC`, `FundProfile`, `FundSpecification`, `DailyNAV`, `MutualFundFee`, `FactsheetFee`, `FactsheetPerformance`, `DividendHistory`, `AssetAllocation`, `RiskSpectrum`, `Top5Holding`, `QuarterlyPortfolio`, `MonthlyPortfolioAssetType`, `FactsheetSubscriptionRedemptionMinimum`, `FactsheetSubscriptionRedemptionPeriod`, `FactsheetStatistics`, `FactsheetBenchmark`, `FundInvolveParty`, `FundFactsheetURL`, `FundIPO`, `FundDividendPolicy`.
 
-**Service methods added:**
-- `ListAMCs`
-- `GetFundProfiles`
-- `GetDailyNAV`
-- `GetMutualFundFees`
-- `GetFactsheetFees`
-- `GetFactsheetPerformance`
-- `GetDividendHistory`
-- `GetAssetAllocation`
-- `GetRiskSpectrum`
-- `GetTop5Holdings`
-- `GetQuarterlyPortfolio`
-- `GetMonthlyPortfolioAssetType`
+**Service methods added (all 21 Fund API endpoints):**
+
+General Info:
+- `ListAMCs` — #1
+- `GetFundProfiles` — #2
+- `GetFundSpecifications` — #3
+- `GetMutualFundFees` — #4
+- `GetFundInvolveParties` — #5
+
+Factsheet:
+- `GetFundFactsheetURLs` — #6
+- `GetFundIPOs` — #7
+- `GetFactsheetBenchmarks` — #8
+- `GetFactsheetSubscriptionRedemptionMinimums` — #9
+- `GetFactsheetSubscriptionRedemptionPeriods` — #10
+- `GetRiskSpectrum` — #11
+- `GetFactsheetStatistics` — #12
+- `GetFactsheetDividendPolicy` — #13
+- `GetFactsheetFees` — #14
+- `GetFactsheetPerformance` — #15
+- `GetAssetAllocation` — #16
+- `GetTop5Holdings` — #17
+
+Outstanding:
+- `GetQuarterlyPortfolio` — #18
+- `GetMonthlyPortfolioAssetType` — #19
+
+Daily Info:
+- `GetDailyNAV` — #20
+- `GetDividendHistory` — #21
 
 **Infrastructure added:**
 - Generic `FetchAllPages[T]` for cursor pagination
@@ -111,22 +134,25 @@ sec-go/
 - Zero clone groups detected by `dupl`
 
 **Tests added:**
-- `fund_service_test.go` — mock server tests for 8+ service methods + error cases
+- `fund_service_test.go` — mock server tests for all service methods + error cases
 - `pagination_test.go` — pagination helper tests
 - `batch_test.go` — batch operation tests (concurrency, progress, context cancellation)
 
-**All unit tests passing: 28 tests.**
+**All unit tests passing: 39 tests.**
 
 ---
 
-## Phase 4: Polish & Documentation ✅ COMPLETE
+## Phase 4: Polish, Documentation & Developer Tools ✅ COMPLETE
 
 **Deliverables:**
-- `README.md` — Installation, auth, endpoints, pagination, batch ops, examples, project structure
+- `README.md` — Installation, auth, all 21 endpoints, pagination, batch ops, examples, project structure
+- `docs/v2-schemas/API.md` — Sorted endpoint inventory with parameters and response fields
 - `examples/basic/main.go` — list AMCs, get profiles, get NAV
 - `examples/batch/main.go` — fetch NAV history for multiple funds concurrently
 - `examples/thaifa/main.go` — THAIFA fallback integration pattern
-- `Makefile` with `test`, `lint`, `format`, `check` targets
+- `cmd/sec-cli/main.go` — CLI tool for ad-hoc queries against the live API
+- `integration_test.go` — Integration tests gated by `//go:build integration`
+- `Makefile` with `test`, `lint`, `format`, `check`, `test-integration` targets
 - `AGENTS.md` with project guidelines
 
 **Quality gates:**
@@ -135,7 +161,7 @@ sec-go/
 - `go vet` ✅
 - `gocyclo -over 25` ✅
 - `dupl -t 100` ✅ (0 clone groups)
-- `go test ./...` ✅ (28 tests)
+- `go test ./...` ✅ (39 tests)
 
 ---
 
@@ -187,6 +213,7 @@ func (s *PriceService) GetPrices(fundID, shortCode string, from, to time.Time) (
 | **No OHLCV emulation** | SEC provides daily closing NAV only. Don't fake data. |
 | **Generic pagination** | `FetchAllPages[T]` works for any paginated endpoint. |
 | **Batch operations separate** | `BatchGetNAVs` / `BatchGetFundProfiles` are opt-in concurrency helpers. |
+| **Integration tests gated** | Real API tests behind `go:build integration` to avoid accidental usage/cost. |
 
 ---
 
@@ -194,8 +221,8 @@ func (s *PriceService) GetPrices(fundID, shortCode string, from, to time.Time) (
 
 1. ✅ Phase 1 — Generic client
 2. ✅ Phase 2 — Schema discovery
-3. ✅ Phase 3 — Endpoint implementation
-4. ✅ Phase 4 — Polish, docs, examples
+3. ✅ Phase 3 — Endpoint implementation (all 21 Fund API endpoints)
+4. ✅ Phase 4 — Polish, docs, examples, CLI, integration tests
 5. ⏳ Phase 5 — THAIFA integration (separate repo)
 
 All sec-go code is complete and passing checks.

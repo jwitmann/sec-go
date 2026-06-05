@@ -176,68 +176,7 @@ GET /v2/fund/general-info/involve-parties
 
 ---
 
-## Daily Information Endpoints
-
-### 20. Daily Fund NAV
-```
-GET /v2/fund/daily-info/nav
-```
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| page_size | int | Items per page (1-100) |
-| next_cursor | string | Pagination cursor |
-| proj_id | string | Filter by project ID |
-| start_nav_date | date | Start date (YYYY-MM-DD) |
-| end_nav_date | date | End date (YYYY-MM-DD) |
-| fund_class_name | string | Filter by fund class |
-
-**Response Items:**
-| Field | Type | Description |
-|-------|------|-------------|
-| proj_id | string | Project number |
-| nav_date | date | NAV date |
-| fund_class_name | string | Fund class |
-| net_asset | number | Net asset value (THB) |
-| last_val | number | NAV per unit (THB/unit) |
-| sell_price | number | Selling price |
-| buy_price | number | Redemption price |
-| sell_swap_price | number | Switch-in price |
-| buy_swap_price | number | Switch-out price |
-
----
-
 ## Factsheet Endpoints
-
-### 14. Fund Fees (Factsheet)
-```
-GET /v2/fund/factsheet/fees
-```
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| page_size | int | Items per page (1-100) |
-| next_cursor | string | Pagination cursor |
-| proj_id | string | Filter by project ID |
-| start_date | date | Factsheet effective start date |
-| end_date | date | Factsheet effective end date |
-| latest | boolean | Return only latest factsheet |
-| fund_class_name | string | Filter by fund class |
-
-**Response Items:**
-| Field | Type | Description |
-|-------|------|-------------|
-| proj_id | string | Project number |
-| start_date | date | Effective start date |
-| end_date | date | Effective end date (null if current) |
-| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
-| fee_type_desc | string | Front-end Fee, Back-end Fee, etc. |
-| rate | float | Specified rate |
-| actual_value | float | Actual charged rate |
-
----
 
 ### 6. Fund Factsheet URLs
 ```
@@ -393,6 +332,33 @@ GET /v2/fund/factsheet/subscription-redemption-periods
 
 ---
 
+### 11. Fund Risk Spectrum
+```
+GET /v2/fund/factsheet/risk-spectrum
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| risk_spectrum | string | Risk level (RS1-RS8, RS81) |
+| risk_spectrum_desc | string | Risk level description |
+
+---
+
 ### 12. Fund Statistics
 ```
 GET /v2/fund/factsheet/statistics
@@ -460,6 +426,35 @@ GET /v2/fund/factsheet/dividend-policy
 
 ---
 
+### 14. Fund Fees (Factsheet)
+```
+GET /v2/fund/factsheet/fees
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_date | date | Factsheet effective start date |
+| end_date | date | Factsheet effective end date |
+| latest | boolean | Return only latest factsheet |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| start_date | date | Effective start date |
+| end_date | date | Effective end date (null if current) |
+| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
+| fee_type_desc | string | Front-end Fee, Back-end Fee, etc. |
+| rate | float | Specified rate |
+| actual_value | float | Actual charged rate |
+
+---
+
 ### 15. Historical Fund Performance
 ```
 GET /v2/fund/factsheet/performance
@@ -515,33 +510,6 @@ GET /v2/fund/factsheet/asset-allocation
 | asset_seq | int | Asset sequence/order |
 | asset_name | string | Asset type name (Thai) |
 | asset_ratio | float | Allocation percentage |
-
----
-
-### 11. Fund Risk Spectrum
-```
-GET /v2/fund/factsheet/risk-spectrum
-```
-
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| page_size | int | Items per page (1-100) |
-| next_cursor | string | Pagination cursor |
-| proj_id | string | Filter by project ID |
-| start_date | date | Factsheet effective start date |
-| end_date | date | Factsheet effective end date |
-| latest | boolean | Return only latest factsheet |
-
-**Response Items:**
-| Field | Type | Description |
-|-------|------|-------------|
-| proj_id | string | Project number |
-| start_date | date | Effective start date |
-| end_date | date | Effective end date (null if current) |
-| prospectus_type | string | IPO, Monthly, SignificantFactsheet |
-| risk_spectrum | string | Risk level (RS1-RS8, RS81) |
-| risk_spectrum_desc | string | Risk level description |
 
 ---
 
@@ -628,6 +596,38 @@ GET /v2/fund/outstanding/portfolio-asset-type
 | assetliab_desc | string | Category description |
 | market_value | number | Market value (THB) |
 | percent_nav | number | %NAV |
+
+---
+
+## Daily Information Endpoints
+
+### 20. Daily Fund NAV
+```
+GET /v2/fund/daily-info/nav
+```
+
+**Query Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| page_size | int | Items per page (1-100) |
+| next_cursor | string | Pagination cursor |
+| proj_id | string | Filter by project ID |
+| start_nav_date | date | Start date (YYYY-MM-DD) |
+| end_nav_date | date | End date (YYYY-MM-DD) |
+| fund_class_name | string | Filter by fund class |
+
+**Response Items:**
+| Field | Type | Description |
+|-------|------|-------------|
+| proj_id | string | Project number |
+| nav_date | date | NAV date |
+| fund_class_name | string | Fund class |
+| net_asset | number | Net asset value (THB) |
+| last_val | number | NAV per unit (THB/unit) |
+| sell_price | number | Selling price |
+| buy_price | number | Redemption price |
+| sell_swap_price | number | Switch-in price |
+| buy_swap_price | number | Switch-out price |
 
 ---
 

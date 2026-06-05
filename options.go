@@ -56,3 +56,21 @@ func WithCache(cache cacheClient, ttl time.Duration) Option {
 		c.cacheTTL = ttl
 	}
 }
+
+func WithLogger(l logger) Option {
+	return func(c *Client) {
+		c.logger = l
+	}
+}
+
+func WithRequestHook(hook RequestHook) Option {
+	return func(c *Client) {
+		c.requestHook = hook
+	}
+}
+
+func WithResponseHook(hook ResponseHook) Option {
+	return func(c *Client) {
+		c.responseHook = hook
+	}
+}

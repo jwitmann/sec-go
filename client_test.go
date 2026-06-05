@@ -2,10 +2,12 @@ package sec
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )
@@ -246,5 +248,71 @@ func TestClientPost(t *testing.T) {
 	}
 	if string(resp) != `{"id":"123"}` {
 		t.Errorf("unexpected response: %s", string(resp))
+	}
+}
+
+type testLogger struct {
+	logs []string
+}
+
+func (tl *testLogger) Printf(format string, v ...any) {
+	tl.logs = append(tl.logs, fmt.Sprintf(format, v...))
+}
+
+func TestClientLogger(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"ok":true}`))
+	}))
+	defer server.Close()
+
+	logger := &testLogger{}
+	c, _ := NewClient("key", WithBaseURL(server.URL), WithLogger(logger))
+	ctx := context.Background()
+	_, _ = c.get(ctx, "/test")
+
+	if len(logger.logs) == 0 {
+		t.Fatal("expected logger output")
+	}
+	found := false
+	for _, log := range logger.logs {
+		if strings.Contains(log, "GET") && strings.Contains(log, "/test") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Errorf("expected log to contain request details, got: %v", logger.logs)
+	}
+}
+
+func TestClientRequestResponseHooks(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Test", "hook")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"ok":true}`))
+	}))
+	defer server.Close()
+
+	var hookHeader string
+	var hookStatus int
+	requestHook := func(req *http.Request) {
+		hookHeader = req.Header.Get("Ocp-Apim-Subscription-Key")
+	}
+	responseHook := func(req *http.Request, resp *http.Response, err error) {
+		if resp != nil {
+			hookStatus = resp.StatusCode
+		}
+	}
+
+	c, _ := NewClient("hook-key", WithBaseURL(server.URL), WithRequestHook(requestHook), WithResponseHook(responseHook))
+	ctx := context.Background()
+	_, _ = c.get(ctx, "/test")
+
+	if hookHeader != "hook-key" {
+		t.Errorf("expected request hook to see auth header, got %q", hookHeader)
+	}
+	if hookStatus != http.StatusOK {
+		t.Errorf("expected response hook to see status 200, got %d", hookStatus)
 	}
 }

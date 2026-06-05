@@ -22,6 +22,19 @@ type cacheClient interface {
 	Set(key string, data []byte, ttl time.Duration)
 }
 
+type (
+	RequestHook  func(req *http.Request)
+	ResponseHook func(req *http.Request, resp *http.Response, err error)
+)
+
+type logger interface {
+	Printf(format string, v ...any)
+}
+
+type noopLogger struct{}
+
+func (noopLogger) Printf(format string, v ...any) {}
+
 type Client struct {
 	httpClient   *http.Client
 	baseURL      string
@@ -34,6 +47,9 @@ type Client struct {
 	cache        cacheClient
 	cacheEnabled bool
 	cacheTTL     time.Duration
+	logger       logger
+	requestHook  RequestHook
+	responseHook ResponseHook
 }
 
 func NewClient(apiKey string, opts ...Option) (*Client, error) {
@@ -49,6 +65,7 @@ func NewClient(apiKey string, opts ...Option) (*Client, error) {
 		primaryKey:  apiKey,
 		rateLimiter: NewRateLimiter(),
 		retryCfg:    defaultRetryConfig(),
+		logger:      noopLogger{},
 	}
 
 	for _, opt := range opts {
@@ -101,9 +118,26 @@ func (c *Client) do(ctx context.Context, method, path string, body io.Reader) (*
 	req.Header.Set("Ocp-Apim-Subscription-Key", c.currentKey())
 	req.Header.Set("Content-Type", "application/json")
 
-	return doWithRetry(ctx, c.retryCfg, func() (*http.Response, error) {
+	c.logger.Printf("[sec-go] %s %s", method, url)
+	if c.requestHook != nil {
+		c.requestHook(req)
+	}
+
+	resp, err := doWithRetry(ctx, c.retryCfg, func() (*http.Response, error) {
 		return c.httpClient.Do(req)
 	})
+
+	if c.responseHook != nil {
+		c.responseHook(req, resp, err)
+	}
+
+	if err != nil {
+		c.logger.Printf("[sec-go] %s %s error: %v", method, url, err)
+	} else {
+		c.logger.Printf("[sec-go] %s %s -> %d", method, url, resp.StatusCode)
+	}
+
+	return resp, err
 }
 
 func (c *Client) Get(ctx context.Context, path string) ([]byte, error) {
