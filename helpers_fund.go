@@ -67,8 +67,8 @@ func (c *Client) FindAMC(ctx context.Context, query string) (*AMC, error) {
 // GetFundProfile returns the latest profile for a single fund.
 func (c *Client) GetFundProfile(ctx context.Context, projID string) (*FundProfile, error) {
 	profiles, _, err := c.GetFundProfiles(ctx, ProfileOptions{
-		ProjID:   projID,
-		PageSize: 1,
+		ProjectInfo: projID,
+		PageSize:    1,
 	})
 	if err != nil {
 		return nil, err

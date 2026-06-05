@@ -129,8 +129,8 @@ func TestFindAMC_NotFound(t *testing.T) {
 
 func TestGetFundProfile(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Query().Get("proj_id") != "KT-Alpha" {
-			t.Errorf("unexpected proj_id: %q", r.URL.Query().Get("proj_id"))
+		if r.URL.Query().Get("project_info") != "KT-Alpha" {
+			t.Errorf("unexpected project_info: %q", r.URL.Query().Get("project_info"))
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"message":"ok","items":[{"proj_id":"KT-Alpha","proj_name_en":"Krungthai Alpha","fund_status":"RG"}]}`))
