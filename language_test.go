@@ -190,7 +190,7 @@ func TestTranslateThaiPeriod(t *testing.T) {
 		{"-", "-"},
 		{"", ""},
 		{"3 years 3 months", "3 years 3 months"}, // already English
-		{"1 month 13 days", "1 month 13 days"},     // already English
+		{"1 month 13 days", "1 month 13 days"},   // already English
 	}
 
 	for _, tc := range tests {

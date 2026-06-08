@@ -379,17 +379,17 @@ func TranslateAllSubscriptionRedemptionPeriods(periods []FactsheetSubscriptionRe
 
 // Thai period translation maps
 var (
-	thaiYear   = "ปี"
-	thaiMonth  = "เดือน"
-	thaiDay    = "วัน"
-	engYear    = "year"
-	engYears   = "years"
-	engMonth   = "month"
-	engMonths  = "months"
-	engDay     = "day"
-	engDays    = "days"
-	thaiNone   = "ไม่มี"
-	engNone    = "None"
+	thaiYear  = "ปี"
+	thaiMonth = "เดือน"
+	thaiDay   = "วัน"
+	engYear   = "year"
+	engYears  = "years"
+	engMonth  = "month"
+	engMonths = "months"
+	engDay    = "day"
+	engDays   = "days"
+	thaiNone  = "ไม่มี"
+	engNone   = "None"
 )
 
 // TranslateThaiPeriod converts Thai period descriptions to English.

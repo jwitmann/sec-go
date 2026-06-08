@@ -216,7 +216,7 @@ fmt.Println(amc.LastUpdDate.Time())
 
 ## Rate Limiting
 
-The client enforces a minimum 16ms delay between requests to comply with SEC's rate limits (5,000 calls per 300 seconds). The rate limiter is thread-safe and respects context cancellation.
+The client enforces a minimum 60ms delay between requests to comply with SEC's rate limits (5,000 calls per 300 seconds). The rate limiter is thread-safe and respects context cancellation.
 
 ## Error Handling
 

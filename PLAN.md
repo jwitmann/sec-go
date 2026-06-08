@@ -70,7 +70,7 @@ sec-go/
 - `client.go` — Core HTTP client with auth, retry, rate limiting
 - `options.go` — Functional options (HTTP client, base URL, secondary key, rate limiter, retries, timeout, cache, logger, request hook)
 - `error.go` — Custom error types (`APIError`, `ErrRateLimited`, `ErrNotFound`, `ErrUnauthorized`)
-- `rate.go` — Thread-safe rate limiter with 16ms minimum delay
+- `rate.go` — Thread-safe rate limiter with 60ms minimum delay
 - `retry.go` — Exponential backoff with jitter, handles HTTP 421 + `Retry-After`
 - `client_test.go` — Mock server tests for auth, rate limiting, retry, errors, options, POST
 - `ClientFromEnv()` — Helper that reads `SEC_API_KEY` from environment
@@ -86,7 +86,7 @@ sec-go/
 - Auth header: `Ocp-Apim-Subscription-Key`
 - Correct NAV endpoint: `/v2/fund/daily-info/nav` (not `/v2/fund/daily-nav`)
 - All working endpoints use cursor-based pagination with `message`, `page_size`, `next_cursor`, `items`
-- Rate limit from SEC docs: 5,000 requests / 300 seconds, minimum 16ms between requests
+- Rate limit from SEC docs: 5,000 requests / 300 seconds, minimum 60ms between requests
 
 **Deliverables:**
 - Complete endpoint inventory in `docs/v2-schemas/API.md` (all 21 endpoints, sorted by category)

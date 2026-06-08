@@ -20,7 +20,7 @@ Accept: application/json
 ## Rate Limits
 
 - **5,000 requests per 300 seconds**
-- **Minimum 16ms delay between consecutive requests**
+- **Minimum 60ms delay between consecutive requests**
 - HTTP **421 Misdirected Request** returned when rate limit is exceeded
 - The `Retry-After` response header contains the number of seconds to wait
 
