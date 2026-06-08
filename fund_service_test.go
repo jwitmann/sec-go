@@ -320,6 +320,12 @@ func TestGetFactsheetStatistics(t *testing.T) {
 	if stats[0].YieldToMaturity != "2026-01-05" {
 		t.Errorf("unexpected yield_to_maturity: %s", stats[0].YieldToMaturity)
 	}
+	if stats[0].RecoveringPeriod != "1 month" {
+		t.Errorf("unexpected recovering_period: %s", stats[0].RecoveringPeriod)
+	}
+	if stats[0].PortfolioDurationPeriod != "1 month 13 days" {
+		t.Errorf("unexpected portfolio_duration_period: %s", stats[0].PortfolioDurationPeriod)
+	}
 }
 
 func TestGetFundSpecifications(t *testing.T) {
@@ -403,7 +409,7 @@ func TestGetFundIPOs(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	requireLen(t, ipos, 1)
-	if ipos[0].FirstSellStartDate != "14/01/2552" || ipos[0].FirstSellEndDate != "20/01/2552" {
+	if ipos[0].FirstSellStartDate != "2009-01-14" || ipos[0].FirstSellEndDate != "2009-01-20" {
 		t.Errorf("unexpected ipo: %+v", ipos[0])
 	}
 }

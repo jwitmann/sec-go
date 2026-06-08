@@ -63,7 +63,12 @@ func (c *Client) GetFundFactsheetURLs(ctx context.Context, opts FeeOptions) ([]F
 
 func (c *Client) GetFundIPOs(ctx context.Context, opts FactsheetOptions) ([]FundIPO, string, error) {
 	path := "/v2/fund/factsheet/ipos" + buildFactsheetQuery(opts)
-	return fetchPaginated[FundIPO](ctx, c, path, "get fund IPOs")
+	ipos, cursor, err := fetchPaginated[FundIPO](ctx, c, path, "get fund IPOs")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateFundIPOs(ipos)
+	return ipos, cursor, nil
 }
 
 func (c *Client) GetFactsheetFees(ctx context.Context, opts FactsheetOptions) ([]FactsheetFee, string, error) {
@@ -98,7 +103,12 @@ func (c *Client) GetFactsheetSubscriptionRedemptionPeriods(ctx context.Context, 
 
 func (c *Client) GetFactsheetStatistics(ctx context.Context, opts FactsheetOptions) ([]FactsheetStatistics, string, error) {
 	path := "/v2/fund/factsheet/statistics" + buildFactsheetQuery(opts)
-	return fetchPaginated[FactsheetStatistics](ctx, c, path, "get factsheet statistics")
+	stats, cursor, err := fetchPaginated[FactsheetStatistics](ctx, c, path, "get factsheet statistics")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateFactsheetStatistics(stats)
+	return stats, cursor, nil
 }
 
 func (c *Client) GetFactsheetDividendPolicy(ctx context.Context, opts FactsheetOptions) ([]FundDividendPolicy, string, error) {

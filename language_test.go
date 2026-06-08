@@ -173,3 +173,96 @@ func TestClientLanguageOption(t *testing.T) {
 		t.Errorf("normalized language = %q, want %q", c2.Language(), LanguageThai)
 	}
 }
+
+func TestTranslateThaiPeriod(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"3 ปี 3 เดือน", "3 years 3 months"},
+		{"1 เดือน 13 วัน", "1 month 13 days"},
+		{"6 เดือน", "6 months"},
+		{"15 วัน", "15 days"},
+		{"1 ปี", "1 year"},
+		{"1 เดือน", "1 month"},
+		{"1 วัน", "1 day"},
+		{"ไม่มี", "None"},
+		{"-", "-"},
+		{"", ""},
+		{"3 years 3 months", "3 years 3 months"}, // already English
+		{"1 month 13 days", "1 month 13 days"},     // already English
+	}
+
+	for _, tc := range tests {
+		got := TranslateThaiPeriod(tc.input)
+		if got != tc.expected {
+			t.Errorf("TranslateThaiPeriod(%q) = %q, want %q", tc.input, got, tc.expected)
+		}
+	}
+}
+
+func TestConvertBuddhistDate(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"03/04/2557", "2014-04-03"},
+		{"15/05/2557", "2014-05-15"},
+		{"01/01/2566", "2023-01-01"},
+		{"31/12/2566", "2023-12-31"},
+		{"2023-01-01", "2023-01-01"}, // already ISO
+		{"-", "-"},
+		{"", ""},
+	}
+
+	for _, tc := range tests {
+		got := ConvertBuddhistDate(tc.input)
+		if got != tc.expected {
+			t.Errorf("ConvertBuddhistDate(%q) = %q, want %q", tc.input, got, tc.expected)
+		}
+	}
+}
+
+func TestTranslateFactsheetStatistics(t *testing.T) {
+	stats := FactsheetStatistics{
+		RecoveringPeriod:        "3 ปี 3 เดือน",
+		PortfolioDurationPeriod: "1 เดือน 13 วัน",
+		PortfolioTurnoverRatio:  "24.63",
+	}
+
+	TranslateFactsheetStatistics(&stats, false)
+	if stats.RecoveringPeriod != "3 ปี 3 เดือน" {
+		t.Errorf("useEnglish=false should not mutate, got %q", stats.RecoveringPeriod)
+	}
+
+	TranslateFactsheetStatistics(&stats, true)
+	if stats.RecoveringPeriod != "3 years 3 months" {
+		t.Errorf("recovering period = %q, want %q", stats.RecoveringPeriod, "3 years 3 months")
+	}
+	if stats.PortfolioDurationPeriod != "1 month 13 days" {
+		t.Errorf("portfolio duration = %q, want %q", stats.PortfolioDurationPeriod, "1 month 13 days")
+	}
+	if stats.PortfolioTurnoverRatio != "24.63" {
+		t.Errorf("turnover ratio should not change, got %q", stats.PortfolioTurnoverRatio)
+	}
+}
+
+func TestTranslateFundIPO(t *testing.T) {
+	ipo := FundIPO{
+		FirstSellStartDate: "03/04/2557",
+		FirstSellEndDate:   "15/05/2557",
+	}
+
+	TranslateFundIPO(&ipo, false)
+	if ipo.FirstSellStartDate != "03/04/2557" {
+		t.Errorf("useEnglish=false should not mutate, got %q", ipo.FirstSellStartDate)
+	}
+
+	TranslateFundIPO(&ipo, true)
+	if ipo.FirstSellStartDate != "2014-04-03" {
+		t.Errorf("first sell start = %q, want %q", ipo.FirstSellStartDate, "2014-04-03")
+	}
+	if ipo.FirstSellEndDate != "2014-05-15" {
+		t.Errorf("first sell end = %q, want %q", ipo.FirstSellEndDate, "2014-05-15")
+	}
+}

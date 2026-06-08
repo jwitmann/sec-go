@@ -255,3 +255,17 @@ func (c *Client) autoTranslateSubscriptionRedemptionPeriods(periods []FactsheetS
 	}
 	TranslateAllSubscriptionRedemptionPeriods(periods, true)
 }
+
+func (c *Client) autoTranslateFactsheetStatistics(stats []FactsheetStatistics) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllFactsheetStatistics(stats, true)
+}
+
+func (c *Client) autoTranslateFundIPOs(ipos []FundIPO) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllFundIPOs(ipos, true)
+}

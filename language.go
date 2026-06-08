@@ -1,5 +1,11 @@
 package sec
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 // Language represents the preferred display language for bilingual fields.
 type Language string
 
@@ -368,6 +374,177 @@ func TranslateSubscriptionRedemptionPeriod(period *FactsheetSubscriptionRedempti
 func TranslateAllSubscriptionRedemptionPeriods(periods []FactsheetSubscriptionRedemptionPeriod, useEnglish bool) {
 	for i := range periods {
 		TranslateSubscriptionRedemptionPeriod(&periods[i], useEnglish)
+	}
+}
+
+// Thai period translation maps
+var (
+	thaiYear   = "ปี"
+	thaiMonth  = "เดือน"
+	thaiDay    = "วัน"
+	engYear    = "year"
+	engYears   = "years"
+	engMonth   = "month"
+	engMonths  = "months"
+	engDay     = "day"
+	engDays    = "days"
+	thaiNone   = "ไม่มี"
+	engNone    = "None"
+)
+
+// TranslateThaiPeriod converts Thai period descriptions to English.
+// Input examples: "3 ปี 3 เดือน", "1 เดือน 13 วัน", "6 เดือน", "15 วัน", "ไม่มี", "-"
+// Output examples: "3 years 3 months", "1 month 13 days", "6 months", "15 days", "None", "-"
+// Returns the original string if it does not match expected Thai patterns.
+func TranslateThaiPeriod(period string) string {
+	if period == "" || period == "-" {
+		return period
+	}
+
+	// Handle special cases
+	if period == thaiNone {
+		return engNone
+	}
+
+	// Check if already English (contains English words for year/month/day)
+	lower := strings.ToLower(period)
+	if strings.Contains(lower, "year") || strings.Contains(lower, "month") || strings.Contains(lower, "day") {
+		return period
+	}
+
+	// Parse Thai period format: "<number> ปี <number> เดือน <number> วัน"
+	// Split by spaces
+	parts := strings.Fields(period)
+	if len(parts) == 0 {
+		return period
+	}
+
+	var result []string
+	for i := 0; i < len(parts); i++ {
+		part := parts[i]
+
+		// Try to parse as number
+		num, err := strconv.Atoi(part)
+		if err != nil {
+			// Not a number, check if it's a Thai unit
+			switch part {
+			case thaiYear:
+				if len(result) > 0 {
+					// Get the last number from result
+					lastIdx := len(result) - 1
+					if n, err := strconv.Atoi(result[lastIdx]); err == nil {
+						result[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, engYear, engYears))
+					}
+				}
+			case thaiMonth:
+				if len(result) > 0 {
+					lastIdx := len(result) - 1
+					if n, err := strconv.Atoi(result[lastIdx]); err == nil {
+						result[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, engMonth, engMonths))
+					}
+				}
+			case thaiDay:
+				if len(result) > 0 {
+					lastIdx := len(result) - 1
+					if n, err := strconv.Atoi(result[lastIdx]); err == nil {
+						result[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, engDay, engDays))
+					}
+				}
+			default:
+				// Unknown token, append as-is
+				result = append(result, part)
+			}
+		} else {
+			// It's a number, append for now (will be combined with unit)
+			result = append(result, strconv.Itoa(num))
+		}
+	}
+
+	if len(result) == 0 {
+		return period
+	}
+
+	return strings.Join(result, " ")
+}
+
+// pluralize returns singular if n == 1, plural otherwise
+func pluralize(n int, singular, plural string) string {
+	if n == 1 {
+		return singular
+	}
+	return plural
+}
+
+// ConvertBuddhistDate converts a Buddhist calendar date string to Gregorian.
+// Expected input format: "DD/MM/YYYY" where year is Buddhist (e.g., "03/04/2557")
+// Output format: "YYYY-MM-DD" Gregorian (e.g., "2014-04-03")
+// If the year is already Gregorian (< 2500), returns the date converted to ISO format.
+// Returns empty string for invalid/empty input.
+func ConvertBuddhistDate(dateStr string) string {
+	if dateStr == "" || dateStr == "-" {
+		return dateStr
+	}
+
+	// Check if already in ISO format
+	if strings.Contains(dateStr, "-") && len(dateStr) == 10 {
+		return dateStr
+	}
+
+	// Parse DD/MM/YYYY format
+	parts := strings.Split(dateStr, "/")
+	if len(parts) != 3 {
+		return dateStr
+	}
+
+	day, err1 := strconv.Atoi(parts[0])
+	month, err2 := strconv.Atoi(parts[1])
+	year, err3 := strconv.Atoi(parts[2])
+	if err1 != nil || err2 != nil || err3 != nil {
+		return dateStr
+	}
+
+	// Convert Buddhist year to Gregorian if needed
+	if year > 2500 {
+		year -= 543
+	}
+
+	return fmt.Sprintf("%04d-%02d-%02d", year, month, day)
+}
+
+// TranslateFactsheetStatistics translates Thai period strings and Buddhist
+// dates in a FactsheetStatistics to English when useEnglish is true.
+// It mutates the provided statistics in place.
+func TranslateFactsheetStatistics(stats *FactsheetStatistics, useEnglish bool) {
+	if !useEnglish {
+		return
+	}
+	stats.RecoveringPeriod = TranslateThaiPeriod(stats.RecoveringPeriod)
+	stats.PortfolioDurationPeriod = TranslateThaiPeriod(stats.PortfolioDurationPeriod)
+}
+
+// TranslateAllFactsheetStatistics translates every statistics record in the
+// slice when useEnglish is true.
+func TranslateAllFactsheetStatistics(statsList []FactsheetStatistics, useEnglish bool) {
+	for i := range statsList {
+		TranslateFactsheetStatistics(&statsList[i], useEnglish)
+	}
+}
+
+// TranslateFundIPO translates Buddhist dates in a FundIPO to Gregorian
+// when useEnglish is true. It mutates the provided IPO in place.
+func TranslateFundIPO(ipo *FundIPO, useEnglish bool) {
+	if !useEnglish {
+		return
+	}
+	ipo.FirstSellStartDate = ConvertBuddhistDate(ipo.FirstSellStartDate)
+	ipo.FirstSellEndDate = ConvertBuddhistDate(ipo.FirstSellEndDate)
+}
+
+// TranslateAllFundIPOs translates every IPO record in the slice when
+// useEnglish is true.
+func TranslateAllFundIPOs(ipos []FundIPO, useEnglish bool) {
+	for i := range ipos {
+		TranslateFundIPO(&ipos[i], useEnglish)
 	}
 }
 
