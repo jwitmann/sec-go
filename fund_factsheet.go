@@ -88,7 +88,12 @@ func (c *Client) GetFactsheetSubscriptionRedemptionMinimums(ctx context.Context,
 
 func (c *Client) GetFactsheetSubscriptionRedemptionPeriods(ctx context.Context, opts FactsheetOptions) ([]FactsheetSubscriptionRedemptionPeriod, string, error) {
 	path := "/v2/fund/factsheet/subscription-redemption-periods" + buildFactsheetQuery(opts)
-	return fetchPaginated[FactsheetSubscriptionRedemptionPeriod](ctx, c, path, "get subscription-redemption periods")
+	periods, cursor, err := fetchPaginated[FactsheetSubscriptionRedemptionPeriod](ctx, c, path, "get subscription-redemption periods")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateSubscriptionRedemptionPeriods(periods)
+	return periods, cursor, nil
 }
 
 func (c *Client) GetFactsheetStatistics(ctx context.Context, opts FactsheetOptions) ([]FactsheetStatistics, string, error) {

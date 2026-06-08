@@ -248,3 +248,10 @@ func (c *Client) autoTranslateMonthlyPortfolioAssetTypes(items []MonthlyPortfoli
 	}
 	TranslateAllMonthlyPortfolioAssetTypes(items, true)
 }
+
+func (c *Client) autoTranslateSubscriptionRedemptionPeriods(periods []FactsheetSubscriptionRedemptionPeriod) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllSubscriptionRedemptionPeriods(periods, true)
+}

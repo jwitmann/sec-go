@@ -292,7 +292,7 @@ func TestGetFactsheetSubscriptionRedemptionPeriods(t *testing.T) {
 	if periods[0].Type != "subscription" {
 		t.Errorf("unexpected type: %s", periods[0].Type)
 	}
-	if periods[0].Period != "ทุกวันทำการ" {
+	if periods[0].Period != "Every Business Day" {
 		t.Errorf("unexpected period: %s", periods[0].Period)
 	}
 	if periods[0].SettlementPeriod != "" {
