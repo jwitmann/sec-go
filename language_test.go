@@ -276,6 +276,7 @@ func TestTranslateBenchmarkName(t *testing.T) {
 		{"ดัชนี MSCI China TRN", "MSCI China TRN Index"},
 		{"ผลการดำเนินงานของกองทุนรวมหลัก", "Performance of the Master Fund"},
 		{"ดัชนีผลตอบแทนรวม SET 50", "SET 50 Total Return Index"},
+		{"ดัชนีผลตอบแทนรวมพันธบัตรรัฐบาลอายุไม่เกิน 1 ปี ของสมาคมตลาดตราสารหนี้ไทย", "ThaiBMA Government Bond 1-Year Total Return Index"},
 		{"", ""},
 		{"Already English", "Already English"},
 	}

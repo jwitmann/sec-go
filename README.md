@@ -263,8 +263,9 @@ Supported translations:
 - `TranslateTop5Holding` / `TranslateAllTop5Holdings`
 - `TranslateQuarterlyPortfolio` / `TranslateAllQuarterlyPortfolios`
 - `TranslateMonthlyPortfolioAssetType` / `TranslateAllMonthlyPortfolioAssetTypes`
+- `TranslateFactsheetBenchmark` / `TranslateAllFactsheetBenchmarks` — benchmark names and remarks
 
-Extend the public `FeeTypeTranslation`, `FeeUnitTranslation`, `AssetNameTranslation`, and `AssetLiabilityTranslation` maps to add more translations as you discover them.
+Extend the public `FeeTypeTranslation`, `FeeUnitTranslation`, `AssetNameTranslation`, `AssetLiabilityTranslation`, and `BenchmarkNameTranslation` maps to add more translations as you discover them.
 
 ## CLI Tool
 
