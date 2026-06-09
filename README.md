@@ -318,7 +318,10 @@ sec-go/
 ├── models.go              # V2 response models (includes flexible DateTime parsing)
 ├── pagination.go          # Pagination helpers
 ├── batch.go               # Batch/concurrent operations
-├── language.go            # Language preference + Thai↔English translation helpers
+├── language.go            # Language type, constants, and bilingual field helpers
+├── dictionaries.go        # Thai↔English translation maps
+├── translate.go           # Struct-specific translation functions
+├── dates.go               # Buddhist date conversion + Thai period translation
 ├── helpers_fund.go        # Convenience helpers: SearchFunds, GetFundsByCompany, etc.
 ├── client_test.go         # Client unit tests
 ├── fund_service_test.go   # Service method tests
