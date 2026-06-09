@@ -555,3 +555,92 @@ func TranslateAllMonthlyPortfolioAssetTypes(items []MonthlyPortfolioAssetType, u
 		TranslateMonthlyPortfolioAssetType(&items[i], useEnglish)
 	}
 }
+
+// BenchmarkRemarkTranslation maps Thai benchmark remark templates to English.
+var BenchmarkRemarkTranslation = map[string]string{
+	"ปรับด้วยอัตราแลกเปลี่ยน เพื่อคำนวณผลตอบแทนเป็นสกุลเงินบาท ณ วันที่คำนวณผลตอบแทน": "Adjusted with exchange rate to calculate returns in Thai Baht as of the return calculation date",
+	"ปรับด้วยต้นทุนการป้องกันความเสี่ยงด้านอัตราแลกเปลี่ยน เพื่อคำนวณผลตอบแทนเป็นสกุลเงินบาท ณ วันที่คำนวณผลตอบแทน": "Adjusted with foreign exchange hedging cost to calculate returns in Thai Baht as of the return calculation date",
+}
+
+// TranslateBenchmarkRemark translates a Thai benchmark remark to English.
+// It handles both exact-match templates and variable-percentage patterns.
+func TranslateBenchmarkRemark(remark string) string {
+	if remark == "" {
+		return remark
+	}
+
+	// Check exact match first
+	if trans, ok := BenchmarkRemarkTranslation[remark]; ok {
+		return trans
+	}
+
+	// Pattern: "ปรับด้วยต้นทุนการป้องกันความเสี่ยง {X}% และปรับด้วยอัตราแลกเปลี่ยน {Y}%"
+	// → "Adjusted with {X}% hedging cost and {Y}% exchange rate"
+	prefix := "ปรับด้วยต้นทุนการป้องกันความเสี่ยง "
+	suffix := " และปรับด้วยอัตราแลกเปลี่ยน "
+	if strings.HasPrefix(remark, prefix) && strings.Contains(remark, suffix) {
+		parts := strings.SplitN(strings.TrimPrefix(remark, prefix), suffix, 2)
+		if len(parts) == 2 {
+			return fmt.Sprintf("Adjusted with %s hedging cost and %s exchange rate", parts[0], parts[1])
+		}
+	}
+
+	return remark
+}
+
+// BenchmarkNameTranslation maps Thai benchmark name templates to English.
+var BenchmarkNameTranslation = map[string]string{
+	"ผลการดำเนินงานของกองทุนรวมหลัก": "Performance of the Master Fund",
+}
+
+// TranslateBenchmarkName translates a Thai benchmark name to English.
+// It handles exact matches and prefix patterns with variable index names.
+func TranslateBenchmarkName(name string) string {
+	if name == "" {
+		return name
+	}
+
+	// Check exact match first
+	if trans, ok := BenchmarkNameTranslation[name]; ok {
+		return trans
+	}
+
+	// Pattern: "ดัชนี {Name}" → "{Name} Index"
+	prefix := "ดัชนี "
+	if strings.HasPrefix(name, prefix) {
+		return strings.TrimPrefix(name, prefix) + " Index"
+	}
+
+	// Pattern: "ดัชนีผลตอบแทนรวม {Name}" → "{Name} Total Return Index"
+	prefix2 := "ดัชนีผลตอบแทนรวม "
+	if strings.HasPrefix(name, prefix2) {
+		return strings.TrimPrefix(name, prefix2) + " Total Return Index"
+	}
+
+	// Pattern: "ผลตอบแทนรวมสุทธิของดัชนี" → "Total Return of... Index"
+	prefix3 := "ผลตอบแทนรวมสุทธิของดัชนี"
+	if strings.HasPrefix(name, prefix3) {
+		remainder := strings.TrimSpace(strings.TrimPrefix(name, prefix3))
+		return "Total Return of " + remainder + " Index"
+	}
+
+	return name
+}
+
+// TranslateFactsheetBenchmark translates a FactsheetBenchmark to English when
+// useEnglish is true. It mutates the provided benchmark in place.
+func TranslateFactsheetBenchmark(bench *FactsheetBenchmark, useEnglish bool) {
+	if !useEnglish {
+		return
+	}
+	bench.Benchmark = TranslateBenchmarkName(bench.Benchmark)
+	bench.Remark = TranslateBenchmarkRemark(bench.Remark)
+}
+
+// TranslateAllFactsheetBenchmarks translates every benchmark in the slice when
+// useEnglish is true.
+func TranslateAllFactsheetBenchmarks(benchmarks []FactsheetBenchmark, useEnglish bool) {
+	for i := range benchmarks {
+		TranslateFactsheetBenchmark(&benchmarks[i], useEnglish)
+	}
+}

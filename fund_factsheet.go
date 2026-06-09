@@ -118,7 +118,12 @@ func (c *Client) GetFactsheetDividendPolicy(ctx context.Context, opts FactsheetO
 
 func (c *Client) GetFactsheetBenchmarks(ctx context.Context, opts FactsheetOptions) ([]FactsheetBenchmark, string, error) {
 	path := "/v2/fund/factsheet/benchmarks" + buildFactsheetQuery(opts)
-	return fetchPaginated[FactsheetBenchmark](ctx, c, path, "get factsheet benchmarks")
+	benchmarks, cursor, err := fetchPaginated[FactsheetBenchmark](ctx, c, path, "get factsheet benchmarks")
+	if err != nil {
+		return nil, "", err
+	}
+	c.autoTranslateFactsheetBenchmarks(benchmarks)
+	return benchmarks, cursor, nil
 }
 
 func (c *Client) GetAssetAllocation(ctx context.Context, opts FactsheetOptions) ([]AssetAllocation, string, error) {

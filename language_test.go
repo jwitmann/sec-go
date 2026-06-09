@@ -266,3 +266,73 @@ func TestTranslateFundIPO(t *testing.T) {
 		t.Errorf("first sell end = %q, want %q", ipo.FirstSellEndDate, "2014-05-15")
 	}
 }
+
+func TestTranslateBenchmarkName(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"ดัชนี Hang Seng", "Hang Seng Index"},
+		{"ดัชนี MSCI China TRN", "MSCI China TRN Index"},
+		{"ผลการดำเนินงานของกองทุนรวมหลัก", "Performance of the Master Fund"},
+		{"ดัชนีผลตอบแทนรวม SET 50", "SET 50 Total Return Index"},
+		{"", ""},
+		{"Already English", "Already English"},
+	}
+
+	for _, tc := range tests {
+		got := TranslateBenchmarkName(tc.input)
+		if got != tc.expected {
+			t.Errorf("TranslateBenchmarkName(%q) = %q, want %q", tc.input, got, tc.expected)
+		}
+	}
+}
+
+func TestTranslateBenchmarkRemark(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			"ปรับด้วยอัตราแลกเปลี่ยน เพื่อคำนวณผลตอบแทนเป็นสกุลเงินบาท ณ วันที่คำนวณผลตอบแทน",
+			"Adjusted with exchange rate to calculate returns in Thai Baht as of the return calculation date",
+		},
+		{
+			"ปรับด้วยต้นทุนการป้องกันความเสี่ยงด้านอัตราแลกเปลี่ยน เพื่อคำนวณผลตอบแทนเป็นสกุลเงินบาท ณ วันที่คำนวณผลตอบแทน",
+			"Adjusted with foreign exchange hedging cost to calculate returns in Thai Baht as of the return calculation date",
+		},
+		{
+			"ปรับด้วยต้นทุนการป้องกันความเสี่ยง 90% และปรับด้วยอัตราแลกเปลี่ยน 10%",
+			"Adjusted with 90% hedging cost and 10% exchange rate",
+		},
+		{"", ""},
+		{"Already English", "Already English"},
+	}
+
+	for _, tc := range tests {
+		got := TranslateBenchmarkRemark(tc.input)
+		if got != tc.expected {
+			t.Errorf("TranslateBenchmarkRemark(%q) = %q, want %q", tc.input, got, tc.expected)
+		}
+	}
+}
+
+func TestTranslateFactsheetBenchmark(t *testing.T) {
+	bench := FactsheetBenchmark{
+		Benchmark: "ดัชนี Hang Seng",
+		Remark:    "ปรับด้วยต้นทุนการป้องกันความเสี่ยง 90% และปรับด้วยอัตราแลกเปลี่ยน 10%",
+	}
+
+	TranslateFactsheetBenchmark(&bench, false)
+	if bench.Benchmark != "ดัชนี Hang Seng" {
+		t.Errorf("useEnglish=false should not mutate benchmark, got %q", bench.Benchmark)
+	}
+
+	TranslateFactsheetBenchmark(&bench, true)
+	if bench.Benchmark != "Hang Seng Index" {
+		t.Errorf("benchmark = %q, want %q", bench.Benchmark, "Hang Seng Index")
+	}
+	if bench.Remark != "Adjusted with 90% hedging cost and 10% exchange rate" {
+		t.Errorf("remark = %q, want %q", bench.Remark, "Adjusted with 90% hedging cost and 10% exchange rate")
+	}
+}

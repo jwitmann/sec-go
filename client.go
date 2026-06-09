@@ -269,3 +269,10 @@ func (c *Client) autoTranslateFundIPOs(ipos []FundIPO) {
 	}
 	TranslateAllFundIPOs(ipos, true)
 }
+
+func (c *Client) autoTranslateFactsheetBenchmarks(benchmarks []FactsheetBenchmark) {
+	if c.language != LanguageEnglish {
+		return
+	}
+	TranslateAllFactsheetBenchmarks(benchmarks, true)
+}
