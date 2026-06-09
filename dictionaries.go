@@ -193,4 +193,5 @@ var BenchmarkRemarkTranslation = map[string]string{
 var BenchmarkNameTranslation = map[string]string{
 	"ผลการดำเนินงานของกองทุนรวมหลัก":                                           "Performance of the Master Fund",
 	"ดัชนีผลตอบแทนรวมพันธบัตรรัฐบาลอายุไม่เกิน 1 ปี ของสมาคมตลาดตราสารหนี้ไทย": "ThaiBMA Government Bond 1-Year Total Return Index",
+	"ผลตอบแทนรวมสุทธิของดัชนีพันธบัตรรัฐบาลอายุไม่เกิน 1 ปี ของสมาคมตลาดตราสารหนี้ไทย": "ThaiBMA Government Bond 1-Year Total Return Index",
 }

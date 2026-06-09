@@ -277,6 +277,7 @@ func TestTranslateBenchmarkName(t *testing.T) {
 		{"ผลการดำเนินงานของกองทุนรวมหลัก", "Performance of the Master Fund"},
 		{"ดัชนีผลตอบแทนรวม SET 50", "SET 50 Total Return Index"},
 		{"ดัชนีผลตอบแทนรวมพันธบัตรรัฐบาลอายุไม่เกิน 1 ปี ของสมาคมตลาดตราสารหนี้ไทย", "ThaiBMA Government Bond 1-Year Total Return Index"},
+		{"ผลตอบแทนรวมสุทธิของดัชนีพันธบัตรรัฐบาลอายุไม่เกิน 1 ปี ของสมาคมตลาดตราสารหนี้ไทย", "ThaiBMA Government Bond 1-Year Total Return Index"},
 		{"", ""},
 		{"Already English", "Already English"},
 	}
