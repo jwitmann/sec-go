@@ -591,6 +591,7 @@ func TranslateBenchmarkRemark(remark string) string {
 // BenchmarkNameTranslation maps Thai benchmark name templates to English.
 var BenchmarkNameTranslation = map[string]string{
 	"ผลการดำเนินงานของกองทุนรวมหลัก": "Performance of the Master Fund",
+	"ดัชนีผลตอบแทนรวมพันธบัตรรัฐบาลอายุไม่เกิน 1 ปี ของสมาคมตลาดตราสารหนี้ไทย": "ThaiBMA Government Bond 1-Year Total Return Index",
 }
 
 // TranslateBenchmarkName translates a Thai benchmark name to English.
