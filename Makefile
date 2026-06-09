@@ -44,7 +44,7 @@ format-check:
 	@test -z "$$(gofumpt -l .)" || (echo "Formatting issues found. Run 'make format' to fix."; exit 1)
 
 complexity:
-	gocyclo -over 25 .
+	gocyclo -over 15 .
 
 duplicates:
 	dupl -t 100 . 2>/dev/null || true

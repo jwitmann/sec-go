@@ -20,6 +20,12 @@ var (
 	engNone   = "None"
 )
 
+var thaiUnitMap = map[string][2]string{
+	thaiYear:  {engYear, engYears},
+	thaiMonth: {engMonth, engMonths},
+	thaiDay:   {engDay, engDays},
+}
+
 // TranslateThaiPeriod converts Thai period descriptions to English.
 // Input examples: "3 ปี 3 เดือน", "1 เดือน 13 วัน", "6 เดือน", "15 วัน", "ไม่มี", "-"
 // Output examples: "3 years 3 months", "1 month 13 days", "6 months", "15 days", "None", "-"
@@ -49,29 +55,9 @@ func TranslateThaiPeriod(period string) string {
 
 		num, err := strconv.Atoi(part)
 		if err != nil {
-			switch part {
-			case thaiYear:
-				if len(result) > 0 {
-					lastIdx := len(result) - 1
-					if n, err := strconv.Atoi(result[lastIdx]); err == nil {
-						result[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, engYear, engYears))
-					}
-				}
-			case thaiMonth:
-				if len(result) > 0 {
-					lastIdx := len(result) - 1
-					if n, err := strconv.Atoi(result[lastIdx]); err == nil {
-						result[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, engMonth, engMonths))
-					}
-				}
-			case thaiDay:
-				if len(result) > 0 {
-					lastIdx := len(result) - 1
-					if n, err := strconv.Atoi(result[lastIdx]); err == nil {
-						result[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, engDay, engDays))
-					}
-				}
-			default:
+			if units, ok := thaiUnitMap[part]; ok {
+				translateUnit(&result, units)
+			} else {
 				result = append(result, part)
 			}
 		} else {
@@ -84,6 +70,16 @@ func TranslateThaiPeriod(period string) string {
 	}
 
 	return strings.Join(result, " ")
+}
+
+func translateUnit(result *[]string, units [2]string) {
+	if len(*result) == 0 {
+		return
+	}
+	lastIdx := len(*result) - 1
+	if n, err := strconv.Atoi((*result)[lastIdx]); err == nil {
+		(*result)[lastIdx] = fmt.Sprintf("%d %s", n, pluralize(n, units[0], units[1]))
+	}
 }
 
 // pluralize returns singular if n == 1, plural otherwise.
