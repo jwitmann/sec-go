@@ -3,7 +3,6 @@ package sec
 import (
 	"context"
 	"net/url"
-	"strconv"
 )
 
 // PVDListItem represents a provident fund from the getPvdList endpoint.
@@ -220,15 +219,7 @@ func (c *Client) GetPVDFundSpecs(ctx context.Context, opts PVDProjOptions) ([]PV
 func (c *Client) GetPVDFundMembers(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundMember, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-member", params)
 	return fetchPaginated[PVDFundMember](ctx, c, path, "get PVD fund members")
 }
@@ -237,15 +228,7 @@ func (c *Client) GetPVDFundMembers(ctx context.Context, opts PVDPeriodOptions) (
 func (c *Client) GetPVDFundAssets(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundAsset, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-asset", params)
 	return fetchPaginated[PVDFundAsset](ctx, c, path, "get PVD fund assets")
 }
@@ -254,15 +237,7 @@ func (c *Client) GetPVDFundAssets(ctx context.Context, opts PVDPeriodOptions) ([
 func (c *Client) GetPVDFundTransactions(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundTransaction, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-transaction", params)
 	return fetchPaginated[PVDFundTransaction](ctx, c, path, "get PVD fund transactions")
 }
@@ -271,15 +246,7 @@ func (c *Client) GetPVDFundTransactions(ctx context.Context, opts PVDPeriodOptio
 func (c *Client) GetPVDFundContributions(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundContribution, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-contribution", params)
 	return fetchPaginated[PVDFundContribution](ctx, c, path, "get PVD fund contributions")
 }
@@ -288,15 +255,7 @@ func (c *Client) GetPVDFundContributions(ctx context.Context, opts PVDPeriodOpti
 func (c *Client) GetPVDFundExpenses(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundExpense, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-expense", params)
 	return fetchPaginated[PVDFundExpense](ctx, c, path, "get PVD fund expenses")
 }
@@ -305,15 +264,7 @@ func (c *Client) GetPVDFundExpenses(ctx context.Context, opts PVDPeriodOptions) 
 func (c *Client) GetPVDFundLiquidity(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundLiquidity, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-liquidity", params)
 	return fetchPaginated[PVDFundLiquidity](ctx, c, path, "get PVD fund liquidity")
 }
@@ -322,15 +273,7 @@ func (c *Client) GetPVDFundLiquidity(ctx context.Context, opts PVDPeriodOptions)
 func (c *Client) GetPVDFundPerformance(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundPerformance, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-performance", params)
 	return fetchPaginated[PVDFundPerformance](ctx, c, path, "get PVD fund performance")
 }
@@ -339,15 +282,7 @@ func (c *Client) GetPVDFundPerformance(ctx context.Context, opts PVDPeriodOption
 func (c *Client) GetPVDFundBenchmarks(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundBenchmark, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-benchmark", params)
 	return fetchPaginated[PVDFundBenchmark](ctx, c, path, "get PVD fund benchmarks")
 }
@@ -389,15 +324,7 @@ func (c *Client) GetPVDFundFees(ctx context.Context, opts PVDProjOptions) ([]PVD
 func (c *Client) GetPVDFundCompliance(ctx context.Context, opts PVDPeriodOptions) ([]PVDFundCompliance, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v1/pvd/fund-compliance", params)
 	return fetchPaginated[PVDFundCompliance](ctx, c, path, "get PVD fund compliance")
 }

@@ -3,7 +3,6 @@ package sec
 import (
 	"context"
 	"net/url"
-	"strconv"
 )
 
 // BondIssuer represents a bond issuer/AMC from the getAmcList endpoint.
@@ -125,15 +124,7 @@ func (c *Client) GetBondFeatures(ctx context.Context, opts BondFeatureOptions) (
 func (c *Client) GetBondCreditRatings(ctx context.Context, opts BondPeriodOptions) ([]BondCreditRating, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v2/bond/credit-rating", params)
 	return fetchPaginated[BondCreditRating](ctx, c, path, "get bond credit ratings")
 }
@@ -142,15 +133,7 @@ func (c *Client) GetBondCreditRatings(ctx context.Context, opts BondPeriodOption
 func (c *Client) GetBondOutstanding(ctx context.Context, opts BondPeriodOptions) ([]BondOutstanding, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v2/bond/outstanding", params)
 	return fetchPaginated[BondOutstanding](ctx, c, path, "get bond outstanding")
 }
@@ -159,15 +142,7 @@ func (c *Client) GetBondOutstanding(ctx context.Context, opts BondPeriodOptions)
 func (c *Client) GetBondRelatedParties(ctx context.Context, opts BondPeriodOptions) ([]BondRelatedParty, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v2/bond/related-party", params)
 	return fetchPaginated[BondRelatedParty](ctx, c, path, "get bond related parties")
 }
@@ -176,15 +151,7 @@ func (c *Client) GetBondRelatedParties(ctx context.Context, opts BondPeriodOptio
 func (c *Client) GetBondInvestorHoldings(ctx context.Context, opts BondPeriodOptions) ([]BondInvestorHolding, string, error) {
 	params := url.Values{}
 	setPagination(params, opts.PageSize, opts.Cursor)
-	if opts.ProjID != "" {
-		params.Set("proj_id", opts.ProjID)
-	}
-	if opts.StartPeriod > 0 {
-		params.Set("start_period", strconv.Itoa(opts.StartPeriod))
-	}
-	if opts.EndPeriod > 0 {
-		params.Set("end_period", strconv.Itoa(opts.EndPeriod))
-	}
+	setPeriodRange(params, opts.ProjID, opts.StartPeriod, opts.EndPeriod)
 	path := buildPath("/v2/bond/investor-holding", params)
 	return fetchPaginated[BondInvestorHolding](ctx, c, path, "get bond investor holdings")
 }

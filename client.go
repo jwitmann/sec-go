@@ -193,18 +193,7 @@ func (c *Client) post(ctx context.Context, path string, payload []byte) ([]byte,
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusNoContent {
-		return nil, fmt.Errorf("%w: %s", ErrNotFound, path)
-	}
-
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("read response: %w", err)
-	}
-
-	return data, nil
+	return readResponse(resp, path)
 }
 
 func (c *Client) getAbsolute(ctx context.Context, url string) ([]byte, error) {
@@ -212,18 +201,7 @@ func (c *Client) getAbsolute(ctx context.Context, url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusNoContent {
-		return nil, fmt.Errorf("%w: %s", ErrNotFound, url)
-	}
-
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("read response: %w", err)
-	}
-
-	return data, nil
+	return readResponse(resp, url)
 }
 
 func (c *Client) postAbsolute(ctx context.Context, url string, payload []byte) ([]byte, error) {
@@ -231,10 +209,14 @@ func (c *Client) postAbsolute(ctx context.Context, url string, payload []byte) (
 	if err != nil {
 		return nil, err
 	}
+	return readResponse(resp, url)
+}
+
+func readResponse(resp *http.Response, path string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusNoContent {
-		return nil, fmt.Errorf("%w: %s", ErrNotFound, url)
+		return nil, fmt.Errorf("%w: %s", ErrNotFound, path)
 	}
 
 	data, err := io.ReadAll(resp.Body)

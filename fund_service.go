@@ -44,6 +44,18 @@ func setDateRange(params url.Values, startKey, endKey string, startDate, endDate
 	}
 }
 
+func setPeriodRange(params url.Values, projID string, startPeriod, endPeriod int) {
+	if projID != "" {
+		params.Set("proj_id", projID)
+	}
+	if startPeriod > 0 {
+		params.Set("start_period", strconv.Itoa(startPeriod))
+	}
+	if endPeriod > 0 {
+		params.Set("end_period", strconv.Itoa(endPeriod))
+	}
+}
+
 func buildPath(base string, params url.Values) string {
 	if len(params) == 0 {
 		return base

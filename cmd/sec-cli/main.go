@@ -14,6 +14,32 @@ import (
 	"github.com/jwitmann/sec-go/internal/testutil"
 )
 
+type cmdHandler func(ctx context.Context, client *sec.Client, args []string)
+
+var commands = map[string]cmdHandler{
+	"amcs":                  handleAMCs,
+	"profiles":              handleProfiles,
+	"specifications":        handleSpecifications,
+	"fees":                  handleFees,
+	"involve-parties":       handleInvolveParties,
+	"nav":                   handleNAV,
+	"dividend-history":      handleDividendHistory,
+	"factsheet-urls":        handleFactsheetURLs,
+	"ipos":                  handleIPOs,
+	"benchmarks":            handleBenchmarks,
+	"subscription-minimums": handleSubscriptionMinimums,
+	"subscription-periods":  handleSubscriptionPeriods,
+	"risk-spectrum":         handleRiskSpectrum,
+	"statistics":            handleStatistics,
+	"dividend-policy":       handleDividendPolicy,
+	"factsheet-fees":        handleFactsheetFees,
+	"performance":           handlePerformance,
+	"asset-allocation":      handleAssetAllocation,
+	"top5":                  handleTop5,
+	"portfolio":             handlePortfolio,
+	"portfolio-asset-type":  handlePortfolioAssetType,
+}
+
 func main() {
 	if len(os.Args) < 2 {
 		printUsage()
@@ -21,57 +47,14 @@ func main() {
 	}
 
 	cmd := os.Args[1]
-	ctx := context.Background()
-	client := newClient()
-
-	switch cmd {
-	case "amcs":
-		handleAMCs(ctx, client)
-	case "profiles":
-		handleProfiles(ctx, client, os.Args[2:])
-	case "specifications":
-		handleSpecifications(ctx, client, os.Args[2:])
-	case "fees":
-		handleFees(ctx, client, os.Args[2:])
-	case "involve-parties":
-		handleInvolveParties(ctx, client, os.Args[2:])
-	case "nav":
-		handleNAV(ctx, client, os.Args[2:])
-	case "dividend-history":
-		handleDividendHistory(ctx, client, os.Args[2:])
-	case "factsheet-urls":
-		handleFactsheetURLs(ctx, client, os.Args[2:])
-	case "ipos":
-		handleIPOs(ctx, client, os.Args[2:])
-	case "benchmarks":
-		handleBenchmarks(ctx, client, os.Args[2:])
-	case "subscription-minimums":
-		handleSubscriptionMinimums(ctx, client, os.Args[2:])
-	case "subscription-periods":
-		handleSubscriptionPeriods(ctx, client, os.Args[2:])
-	case "risk-spectrum":
-		handleRiskSpectrum(ctx, client, os.Args[2:])
-	case "statistics":
-		handleStatistics(ctx, client, os.Args[2:])
-	case "dividend-policy":
-		handleDividendPolicy(ctx, client, os.Args[2:])
-	case "factsheet-fees":
-		handleFactsheetFees(ctx, client, os.Args[2:])
-	case "performance":
-		handlePerformance(ctx, client, os.Args[2:])
-	case "asset-allocation":
-		handleAssetAllocation(ctx, client, os.Args[2:])
-	case "top5":
-		handleTop5(ctx, client, os.Args[2:])
-	case "portfolio":
-		handlePortfolio(ctx, client, os.Args[2:])
-	case "portfolio-asset-type":
-		handlePortfolioAssetType(ctx, client, os.Args[2:])
-	default:
+	handler, ok := commands[cmd]
+	if !ok {
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n\n", cmd)
 		printUsage()
 		os.Exit(1)
 	}
+
+	handler(context.Background(), newClient(), os.Args[2:])
 }
 
 func printUsage() {
@@ -157,7 +140,7 @@ func printJSON(v any) {
 	fmt.Println(string(data))
 }
 
-func handleAMCs(ctx context.Context, client *sec.Client) {
+func handleAMCs(ctx context.Context, client *sec.Client, args []string) {
 	items, _, err := client.ListAMCs(ctx, 10, "")
 	if err != nil {
 		log.Fatalf("ListAMCs failed: %v", err)
