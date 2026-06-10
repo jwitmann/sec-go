@@ -1,0 +1,118 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Digital Asset API",
+        "description": "ข้อมูลที่แสดงเป็นข้อมูลที่ผู้ประกอบธุรกิจนำส่งให้กับสำนักงาน ก.ล.ต. เท่านั้น และสำนักงาน ก.ล.ต. ไม่รับรองความถูกต้อง",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.sec.or.th/DigitalAsset"
+        }
+    ],
+    "paths": {
+        "/profile/intermediary": {
+            "post": {
+                "summary": "01. ผู้ประกอบธุรกิจสินทรัพย์ดิจิทัล",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>last_upd_date</td>\n      <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>\n      <td>รหัสผู้ประกอบธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>name_th</td>\n      <td>ชื่อผู้ประกอบธุรกิจ (ไทย)</td>\n    </tr>\n    <tr>\n      <td>name_en</td>\n      <td>ชื่อผู้ประกอบธุรกิจ (อังกฤษ)</td>\n    </tr>\n    <tr>\n      <td>lic_code</td>\n      <td>รหัสประเภทใบอนุญาต</td>\n    </tr>\n    <tr>\n      <td>lic_action_code</td>\n      <td>รหัสประเภทการประกอบธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>lic_efft_date</td>\n      <td>วันที่ใบอนุญาตมีผลบังคับใช้</td>\n    </tr>\n    <tr>\n      <td>lic_act_date</td>\n      <td>วันที่เริ่มประกอบธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>lic_exp_date</td>\n      <td>วันที่สิ้นสุดใบอนุญาต</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "01-profile-intermediary",
+                "requestBody": {
+                    "description": "ระบุชื่อ /\nส่วนหนึ่งของชื่อบริษัทที่ออกสินทรัพย์ดิจิทัลทั้งไทยและภาษาอังกฤษ",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "IntermediaryName"
+                                ],
+                                "properties": {
+                                    "IntermediaryName": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": "{\n\"IntermediaryName\" : \"Bitkub\"  \n}"
+                            },
+                            "example": {
+                                "IntermediaryName": "Bitkub"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "unique_id": "string",
+                                            "name_th": "string",
+                                            "name_en": "string",
+                                            "lic_code": "string",
+                                            "lic_action_code": "string",
+                                            "lic_efft_date": "datetime",
+                                            "lic_exp_date": "datetime",
+                                            "last_upd_date": "datetime"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/all_da_intermediary": {
+            "get": {
+                "summary": "02. ผู้ประกอบธุรกิจสินทรัพย์ดิจิทัลทั้งหมด",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>last_upd_date</td>\n      <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>\n      <td>รหัสผู้ประกอบธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>name_th</td>\n      <td>ชื่อผู้ประกอบธุรกิจ (ไทย)</td>\n    </tr>\n    <tr>\n      <td>name_en</td>\n      <td>ชื่อผู้ประกอบธุรกิจ (อังกฤษ)</td>\n    </tr>\n    <tr>\n      <td>lic_code</td>\n      <td>รหัสประเภทใบอนุญาต</td>\n    </tr>\n    <tr>\n      <td>lic_action_code</td>\n      <td>รหัสประเภทการประกอบธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>lic_efft_date</td>\n      <td>วันที่ใบอนุญาตมีผลบังคับใช้</td>\n    </tr>\n    <tr>\n      <td>lic_act_date</td>\n      <td>วันที่เริ่มประกอบธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>lic_exp_date</td>\n      <td>วันที่สิ้นสุดใบอนุญาต</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "02-profile-all_da_intermediary",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "unique_id": "string",
+                                            "name_th": "string",
+                                            "name_en": "string",
+                                            "lic_code": "string",
+                                            "lic_action_code": "string",
+                                            "lic_efft_date": "datetime",
+                                            "lic_exp_date": "datetime",
+                                            "last_upd_date": "datetime"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}

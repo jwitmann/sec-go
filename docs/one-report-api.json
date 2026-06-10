@@ -1,0 +1,1518 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "One Report API",
+        "description": "ข้อมูลเกี่ยวกับรายงานประจำปี",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.sec.or.th/onereport"
+        }
+    ],
+    "paths": {
+        "/sbo/{report_year}/info/{language}": {
+            "get": {
+                "summary": "01.ข้อมูลทั่วไปของบริษัท",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>report_year</td>\n      <td>ปี</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>   \n      <td>รหัสบริษัท</td>\n    </tr>\n    <tr>  \n    <td>language</td>          \n      <td>\n        <strong>ภาษา</strong>\n        <ul>\n          <li>T = ภาษาไทย</li>\n          <li>E = ภาษาอังกฤษ</li>\n        </ul>\n      </td>\n    </tr>\n    <tr>\n      <td>corp_name</td>\n      <td>ชื่อบริษัท</td>\n    </tr>\n    <tr>\n      <td>symbol</td>\n      <td>ชื่อย่อหลักทรัพย์</td>\n    </tr>\n    <tr>\n      <td>address</td>\n      <td>สถานที่ตั้งสำนักงานใหญ่</td>\n    </tr>\n    <tr>\n      <td>province</td>\n      <td>จังหวัด</td>\n    </tr>\n    <tr>\n      <td>zip_code</td>\n      <td>รหัสไปรษณีย์</td>\n    </tr>\n    <tr>\n      <td>business_type</td>\n      <td>ประเภทธุรกิจ</td>\n    </tr>\n    <tr>\n      <td>registered_number</td>\n      <td>เลขทะเบียนบริษัท</td>\n    </tr>\n    <tr>\n      <td>telephone</td>\n      <td>โทรศัพท์</td>\n    </tr>\n    <tr>\n      <td>fax</td>\n      <td>โทรสาร</td>\n    </tr>\n    <tr>\n      <td>website</td>\n      <td>เว็บไซต์บริษัท</td>\n    </tr>\n    <tr>\n      <td>email</td>\n      <td>อีเมล</td>\n    </tr>\n    <tr>\n      <td>common_paidup_share</td>\n      <td>จำนวนหุ้นที่จดทะเบียนกับตลาดหลักทรัพย์</td>\n    </tr>\n    <tr>\n      <td>preferred_paidup_share</td>\n      <td>จำนวนหุ้นบุริมสิทธิที่จดทะเบียนกับตลาดหลักทรัพย์</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "01-SBO-Info",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "enum": [
+                                "2029"
+                            ],
+                            "type": "string",
+                            "default": "2029"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "language",
+                        "in": "path",
+                        "description": "ภาษา (T / E)",
+                        "required": true,
+                        "schema": {
+                            "enum": [
+                                "B"
+                            ],
+                            "type": "string",
+                            "default": "B"
+                        },
+                        "example": "T"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:50.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "language": "T",
+                                            "corp_name": "ธนาคารกรุงไทย จำกัด (มหาชน)",
+                                            "symbol": "KTB",
+                                            "address": "35 ถนนสุขุมวิท แขวงคลองเตยเหนือ เขตวัฒนา",
+                                            "province": "กรุงเทพ",
+                                            "zip_code": "10110",
+                                            "business_type": "ธุรกิจธนาคารพาณิชย์เต็มรูปแบบ โดยมีสาขาอยู่ทั่วภูมิภาคในประเทศไทย และในบางภูมิภาคหลักของโลก",
+                                            "registered_number": "0107537000882",
+                                            "telephone": "0-2111-1111",
+                                            "fax": "0-2255-9391-3",
+                                            "website": "https://krungthai.com",
+                                            "email": "Call.CallCenter@krungthai.com",
+                                            "common_paidup_share": 13976061250,
+                                            "preferred_paidup_share": 5500000
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:35:38.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000022",
+                                            "language": "T",
+                                            "corp_name": "ธนาคารกสิกรไทย จำกัด (มหาชน)",
+                                            "symbol": "KBANK",
+                                            "address": "เลขที่ 400/22 ถนนพหลโยธิน แขวงสามเสนใน เขตพญาไท",
+                                            "province": "กรุงเทพ",
+                                            "zip_code": "10400",
+                                            "business_type": "ธนาคารกสิกรไทยประกอบกิจการธนาคารพาณิชย์ ธุรกิจหลักทรัพย์และธุรกิจที่เกี่ยวเนื่องตามที่ได้รับอนุญาตไว้ในพระราชบัญญัติธุรกิจสถาบันการเงินฯ และพระราชบัญญัติหลักทรัพย์และตลาดหลักทรัพย์ฯ และประกาศที่เกี่ยวข้อง โดย ณ วันที่ 31 ธันวาคม 2564 ธนาคารมีเครือข่ายสาขาจำนวน 839 สาขา และเครื่องอิเล็กทรอนิกส์สำหรับทำธุรกรรมด้วยตนเอง 10,911 เครื่อง ครอบคลุมทุกพื้นที่และเพียงพอต่อความต้องการของลูกค้า นอกจากนี้ ธนาคารมีเครือข่ายการให้บริการในต่างประเทศรวม 17 แห่ง ใน 7 ประเทศ มีศูนย์กลางการดำเนินงานและให้บริการที่สำนักงานใหญ่",
+                                            "registered_number": "0107536000315",
+                                            "telephone": "02-2220000",
+                                            "fax": "02-4701144",
+                                            "website": "www.kasikornbank.com",
+                                            "email": "info@kasikornbank.com",
+                                            "common_paidup_share": 2369327593,
+                                            "preferred_paidup_share": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sbo/{report_year}/product_income/{unique_id}": {
+            "get": {
+                "summary": "03.ข้อมูลโครงสร้างรายได้แบ่งตามกลุ่มธุรกิจ",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>last_upd_date</td>\n      <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>report_year</td>\n      <td>ปี</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>\n      <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n      <td>business_income_code</td>\n      <td>รหัสรายได้</td>\n    </tr>\n    <tr>\n      <td>sequence</td>\n      <td>ลำดับ</td>\n    </tr>\n    <tr>\n      <td>business_income_desc</td>\n      <td>ประเภทรายได้</td>\n    </tr>\n    <tr>\n      <td>asof_year</td>\n      <td>มูลค่า ณ ปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_yesteryear</td>\n      <td>มูลค่า ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_year_before_yesteryear</td>\n      <td>มูลค่า 2 ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_year_percent</td>\n      <td>สัดส่วน (เปอร์เซ็นต์) ณ ปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_yesteryear_percent</td>\n      <td>สัดส่วน (เปอร์เซ็นต์) ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_year_before_yesteryear_percent</td>\n      <td>สัดส่วน (เปอร์เซ็นต์) 2 ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "03-SBO-Product-Income",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:48.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "business_income_code": "218",
+                                            "sequence": 1,
+                                            "business_income_desc": "รายได้รวม",
+                                            "asof_year": 115785741,
+                                            "asof_yesteryear": 122247423,
+                                            "asof_year_before_yesteryear": 125657639,
+                                            "asof_year_percent": 100,
+                                            "asof_yesteryear_percent": 100,
+                                            "asof_year_before_yesteryear_percent": 100
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:48.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "business_income_code": "0",
+                                            "sequence": 2,
+                                            "business_income_desc": "รายได้ดอกเบี้ยสุทธิ",
+                                            "asof_year": 83371809,
+                                            "asof_yesteryear": 88342723,
+                                            "asof_year_before_yesteryear": 88316308,
+                                            "asof_year_percent": 72.01,
+                                            "asof_yesteryear_percent": 72.26,
+                                            "asof_year_before_yesteryear_percent": 70.28
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sbo/{report_year}/risk/{unique_id}": {
+            "get": {
+                "summary": "05.ข้อมูลรายละเอียดการบริหารจัดการความเสี่ยง",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>last_upd_date</td>\n      <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>report_year</td>\n      <td>ปี</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>\n      <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n      <td>risk_category</td>\n      <td>\n        <strong>ประเภทความเสี่ยง</strong>\n        <ul>\n          <li>01 = Strategic Risk</li>\n          <li>02 = Operational Risk</li>\n          <li>03 = Compliance Risk</li>\n          <li>04 = Financial Risk </li>\n          <li>05 = Company Risk </li>\n          <li>06 = Foreign Risk </li>\n          <li>07 = Holder Risk </li>\n        </ul>\n      </td>\n    </tr>\n    <tr>\n      <td>risk_code</td>\n      <td>รหัสความเสี่ยง</td>\n    </tr>\n    <tr>\n      <td>sequence</td>\n      <td>ลำดับ</td>\n    </tr>\n    <tr>\n      <td>choice</td>\n      <td>\n        <strong>การประเมินความเสี่ยง</strong>\n        <ul>\n          <li>Y = มีการประเมินความเสี่ยง</li>\n          <li>N = ไม่มีการประเมินความเสี่ยง</li>\n          <li>D = Not applicable</li>\n        </ul>\n      </td>\n    </tr>\n    <tr>\n      <td>holder_risk</td>\n      <td>\n        <strong>ความเสี่ยงของผู้ถือหุ้น</strong>\n        <ul>\n          <li>Y = มีความเสี่ยง</li>\n          <li>N = ไม่มีความเสี่ยง</li>\n        </ul>\n      </td>\n    </tr>\n    <tr>\n      <td>foreign_risk</td>\n      <td>\n        <strong>Foreign Security Risk</strong>\n        <ul>\n          <li>Y = มีความเสี่ยง</li>\n          <li>N = ไม่มีความเสี่ยง</li>\n          <li>D = Not applicable</li>\n        </ul>\n      </td>\n    </tr>\n    \n  </tbody>\n</table>\n<br>",
+                "operationId": "05-SBO-Risk-Detail",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:34.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "risk_code": 223,
+                                            "sequence": 1,
+                                            "holder_risk": "Y",
+                                            "foreign_risk": "D",
+                                            "choice": "Y"
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:34.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "risk_code": 224,
+                                            "sequence": 2,
+                                            "holder_risk": "Y",
+                                            "foreign_risk": "D",
+                                            "choice": "Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sustainability/{report_year}/detail/{unique_id}": {
+            "get": {
+                "summary": "06.ข้อมูลนโยบายและเป้าหมายการจัดการด้านความยั่งยืน",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>policy_type</td>\n         <td><strong>ประเภทนโยบาย</strong> <ul> \n          <li>01 = Sustainability Policy and Goal </li> \n          <li>02 = Environmental Sustainability Management</li> \n          <li>03 = Social Sustainability Management</li>\n         </ul> </td></td>\n     </tr>\n     <tr>\n         <td>policy</td>\n         <td><strong>นโยบายและมาตราฐานการจัดการด้านความยั่งยืน</strong> <ul> <li>Y = มี</li> <li>N = ไม่มี</li> </ul> </td>\n     </tr>\n   <tr>\n         <td>policy_url</td>\n         <td>ที่อยู่เว็บไซต์ของข้อมูล (url)</td>\n     </tr>\n  </tbody>\n </table>\n<br>",
+                "operationId": "06-Sustainability-Detail",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:25.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "policy_type": "01",
+                                            "policy": "Y",
+                                            "policy_url": "-https://krungthai.com/th/sustainability/esg-policy/environmental/climate-risk\n- https://krungthai.com/th/sustainability/esg-policy/social/fairness\n- https://krungthai.com/th/sustainability/esg-policy/governance/compliance"
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:27.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "policy_type": "02",
+                                            "policy": "Y",
+                                            "policy_url": "https://krungthai.com/Download/CSR/CSRDownload_71KTB_SR_2021_TH_29MAR_18.5MB.pdf"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sustainability/{report_year}/humanrights_issue/{unique_id}": {
+            "get": {
+                "summary": "08.ข้อมูลนโยบายสิทธิมนุษยชน",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>humanrights_type</td>\n         <td><strong>ประเภทสิทธิมนุษยชน</strong> <ul> \n          <li>01 = Foreign Worker</li> \n          <li>02 = Child Labor</li> \n          <li>03 = Consumer Rights</li> \n          <li>04 = Community and Environment Rights</li> \n          <li>05 = Safety and Occupational Health at work</li> \n          <li>06 = Employee Rights Management</li> \n          <li>07 = Non-discrimination</li> </ul> </td>\n     </tr>\n     <tr>\n         <td>human_rights</td>\n         <td><strong>นโยบายสิทธิมนุษยชน</strong> <ul> \n         <li>Y = มี</li> \n         <li>N = ไม่มี</li> </ul> </td>\n     </tr>\n   </tbody>\n </table>\n<br>",
+                "operationId": "08-Sustainability-Humanrights_issue",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2022
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-11-24T06:09:10.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000013",
+                                            "human_rights_type": "01",
+                                            "human_rights": "Y"
+                                        },
+                                        {
+                                            "last_upd_date": "2023-11-24T06:09:10.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000013",
+                                            "human_rights_type": "02",
+                                            "human_rights": "Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgp/{report_year}/governance/{unique_id}": {
+            "get": {
+                "summary": "13.ข้อมูลนโยบายการกำกับดูแลกิจการ",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n    </tr>\n    <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n        <td>cg_policy</td>\n        <td>\n          <strong>นโยบายการกำกับดูแลกิจการ</strong>\n          <ul>\n            <li>Y = มี</li>\n            <li>N = ไม่มี</li>\n          </ul>\n        </td>\n    </tr>\n    <tr>\n        <td>url</td>\n        <td>url นโยบายการกำกับดูแลกิจการ</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "13-CGP-Governance",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-17T02:35:54.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "cg_policy": "Y",
+                                            "url": "https://krungthai.com/Download/aboutKTB/MediaFile_238CorporateGovernancePolicy2564.pdf"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgp/{report_year}/director/{unique_id}": {
+            "get": {
+                "summary": "14.ข้อมูลนโยบายและแนวปฏิบัติที่เกี่ยวกับคณะกรรมการ",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n    </tr>\n    <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n        <td>director_policy_type</td>\n        <td>\n          <strong>ประเภทนโยบายและแนวปฏิบัติที่เกี่ยวกับคณะกรรมการ</strong>\n          <ul>\n            <li>01 = Nomination of Directors</li>\n            <li>02 = Compensation</li>\n            <li>03 = The Independent of the Board of Directors</li>\n            <li>04= Development of Directors</li>\n            <li>05 = Board Performance Evaluation</li>\n            <li>06 = Corporate Governance of Subsidiaries and Associated</li>\n          </ul>\n        </td>\n    </tr>\n    <tr>\n        <td>director_policy</td>\n        <td>\n          <strong>นโยบายและแนวปฏิบัติที่เกี่ยวกับคณะกรรมการ</strong>\n          <ul>\n            <li>Y = มี</li>\n            <li>N = ไม่มี</li>\n          </ul>\n        </td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "14-CGP-Director",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:49:12.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "director_policy_type": "01",
+                                            "director_policy": "Y"
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:49:12.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "director_policy_type": "02",
+                                            "director_policy": "Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgp/{report_year}/code_of_conduct/{unique_id}": {
+            "get": {
+                "summary": "15.ข้อมูลจรรยาบรรณธุรกิจ",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n    </tr>\n    <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n        <td>codeof_conduct_type</td>\n        <td>\n            <strong>ประเภทจรรยาบรรณธุรกิจ</strong>\n            <ul>\n              <li>01 = Code of Conduct </li>\n              <li>02 = Protecting Usage of Inside Information</li>\n              <li>03 = Prevention of Conflicts of Interest </li>\n              <li>04 = Anti-corruption </li>\n              <li>05 = Whistleblowing </li>\n            </ul>\n        </td>\n    </tr>\n    <tr>\n        <td>codeof_conduct</td>\n        <td>\n          <strong>จรรยาบรรณธุรกิจ</strong>\n          <ul>\n            <li>Y = มี</li>\n            <li>N = ไม่มี</li>\n          </ul>\n        </td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "15-CGP-CodeofConduct",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:49:16.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "codeof_conduct_type": "01",
+                                            "codeof_conduct": "Y"
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:49:16.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "codeof_conduct_type": "02",
+                                            "codeof_conduct": "Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/board/{unique_id}": {
+            "get": {
+                "summary": "17.ข้อมูลองค์ประกอบของคณะกรรมการบริษัท",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n      </tr>\n      <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n      </tr>\n      <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n      </tr>\n    <tr>\n        <td>total</td>\n        <td>จำนวนกรรมการทั้งหมด</td>\n    </tr>\n    <tr>\n        <td>total_male</td>\n        <td>จำนวนกรรมการชาย</td>\n    </tr>\n    <tr>\n        <td>total_female</td>\n        <td>จำนวนกรรมการหญิง</td>\n    </tr>\n    <tr>\n        <td>total_independent</td>\n        <td>จำนวนกรรมการอิสระ</td>\n    </tr>\n    <tr>\n        <td>total_executive</td>\n        <td>จำนวนกรรมการที่เป็นผู้บริหาร</td>\n    </tr>\n    <tr>\n        <td>total_non_executive</td>\n        <td>จำนวนกรรมการที่ไม่เป็นผู้บริหาร</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "17-CGS-Board",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-17T02:36:19.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "total": 12,
+                                            "total_male": 10,
+                                            "total_female": 2,
+                                            "total_independent": 6,
+                                            "total_executive": 1,
+                                            "total_non_executive": 11
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/auditor_company/{unique_id}": {
+            "get": {
+                "summary": "19.ข้อมูลบริษัทผู้สอบบัญชี",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n      </tr>\n      <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n      </tr>\n      <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n      </tr>\n      <tr>\n        <td>auditor_company_code</td>\n        <td>รหัสบริษัทผู้สอบบัญชี</td>\n      </tr>              \n    <tr>\n        <td>auditor_company_name_th</td>\n        <td>ชื่อบริษัทผู้สอบบัญชี (ภาษาไทย)</td>\n    </tr>\n    <tr>\n        <td>auditor_company_name_en</td>\n        <td>ชื่อบริษัทผู้สอบบัญชี (ภาษาอังกฤษ)</td>\n    </tr>\n    <tr>\n        <td>audit_fee</td>\n        <td>ค่าสอบบัญชี (บาท)</td>\n    </tr>\n    <tr>\n        <td>non_audit</td>\n        <td>\n            <strong>ค่าบริการอื่นที่นอกเหนือจากงานสอบบัญชี</strong>\n            <ul>\n              <li>Y = มี</li>\n              <li>N = ไม่มี</li>\n            </ul>\n        </td>\n      </tr>\n    <tr>\n        <td>non_audit_detail</td>\n        <td>รายละเอียดบริการอื่นที่นอกเหนือจากงานสอบบัญชี</td>\n    </tr>\n    <tr>\n        <td>non_audit_fee</td>\n        <td>ค่าบริการอื่นที่นอกเหนือจากงานสอบบัญชี (non-audit fee) (บาท)</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "19-CGS-AuditorCompany",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:15.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "auditor_company_code": 18,
+                                            "auditor_company_name_th": "บริษัท สำนักงาน อีวาย จำกัด",
+                                            "auditor_company_name_en": "EY OFFICE LIMITED",
+                                            "audit_fee": 28260000,
+                                            "non_audit": "Y",
+                                            "non_audit_detail": "n/a",
+                                            "non_audit_fee": 3950000
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/director_performance/{unique_id}": {
+            "get": {
+                "summary": "20.ข้อมูลการเข้าร่วมประชุมคณะกรรมการบริษัท",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n      </tr>\n      <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n      </tr>\n      <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n      </tr>\n    <tr>\n        <td>group_assessment</td>\n        <td>\n            <strong>การประเมินคณะกรรมการบริษัทโดยรวม</strong>\n            <ul>\n              <li>Y = มี</li>\n              <li>N = ไม่มี</li>\n            </ul>\n        </td>\n      </tr>\n      <tr>\n        <td>self_assessment</td>\n        <td>\n            <strong>การประเมินตนเองของคณะกรรมการบริษัท</strong>\n            <ul>\n              <li>Y = มี</li>\n              <li>N = ไม่มี</li>\n            </ul>\n        </td>\n      </tr>\n      <tr>\n        <td>cross_assessment</td>\n        <td>\n            <strong>การประเมินระหว่างคณะกรรมการบริษัทแต่ละคน</strong>\n            <ul>\n              <li>Y = มี</li>\n              <li>N = ไม่มี</li>\n            </ul>\n        </td>\n      </tr>\n    <tr>\n        <td>total_board_meeting</td>\n        <td>จำนวนกรรมการเข้าร่วมประชุม</td>\n    </tr>\n    <tr>\n        <td>agm_meeting_date</td>\n        <td>วันที่เข้าร่วมประชุม AGM</td>\n    </tr>\n    <tr>\n        <td>egm_meeting</td>\n        <td>\n            <strong>การเข้าร่วมประชุม EGM</strong>\n            <ul>\n              <li>Y = เข้าร่วม</li>\n              <li>N = ไม่เข้าร่วม</li>\n            </ul>\n        </td>\n      </tr>\n      <tr>\n        <td>total_egm_meeting</td>\n        <td>จำนวนการเข้าร่วมประชุม EGM</td>\n    </tr>\n    <tr>\n        <td>total_audit_meeting</td>\n        <td>จำนวนการเข้าร่วมประชุมคณะกรรมการตรวจสอบ</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "20-CGS-DirectorPerformance",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-17T02:36:37.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "group_assessment": "Y",
+                                            "self_assessment": "Y",
+                                            "cross_assessment": "Y",
+                                            "total_board_meeting": 19,
+                                            "agm_meeting_date": "2021-04-09T12:00:00.0000000+00:00",
+                                            "egm_meeting": "N",
+                                            "total_egm_meeting": null,
+                                            "total_audit_meeting": null
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scp/{report_year}/labor_dispute/{unique_id}": {
+            "get": {
+                "summary": "11.ข้อมูลผลการดำเนินงานด้านความยั่งยืนทางสังคม - ข้อพิพาทด้านแรงงาน",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>social_performance_category</td>\n         <td><strong>ประเภทผลการดำเนินงานด้านสังคม</strong> <ul>\n          <li>06 = Labor Dispute</li> \n          </ul> </td>\n     </tr>\n     <tr>\n         <td>social_performance_code</td>\n         <td>รหัสผลการดำเนินงานด้านสังคม</td>\n     </tr>\n  <tr>\n         <td>sequence</td>\n         <td>ลำดับ</td>\n     </tr>\n <tr>\n         <td>asof_year</td>\n         <td><strong>ณ ปีที่รายงาน</strong> <ul>\n          <li>Y = มี</li>\n          <li>N = ไม่มี</li>\n          </ul></td>\n     </tr>\n  <tr>\n         <td>asof_yesteryear</td>\n         <td><strong>ปีก่อนหน้าปีที่รายงาน</strong> <ul>\n          <li>Y = มี</li>\n          <li>N = ไม่มี</li>\n          </ul></td>\n     </tr>\n  <tr>\n         <td>asof_year_before_yesteryear</td>\n         <td><strong>2 ปีก่อนหน้าปีที่รายงาน</strong> <ul>\n          <li>Y = มี</li>\n          <li>N = ไม่มี</li>\n          </ul></td>\n     </tr>\n    </tbody>\n </table>\n<br>",
+                "operationId": "11-SocialPerformance-Labor_dispute",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2024-04-23T08:45:07.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000003",
+                                            "social_performance_category": "06",
+                                            "social_performance_code": 684,
+                                            "sequence": 1,
+                                            "asof_year": "N",
+                                            "asof_yesteryear": "N",
+                                            "asof_year_before_yesteryear": "N"
+                                        },
+                                        {
+                                            "last_upd_date": "2024-04-23T08:52:23.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000004",
+                                            "social_performance_category": "06",
+                                            "social_performance_code": 684,
+                                            "sequence": 1,
+                                            "asof_year": "N",
+                                            "asof_yesteryear": "N",
+                                            "asof_year_before_yesteryear": "N"
+                                        },
+                                        {
+                                            "last_upd_date": "2024-04-24T03:04:44.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000007",
+                                            "social_performance_category": "06",
+                                            "social_performance_code": 684,
+                                            "sequence": 1,
+                                            "asof_year": "N",
+                                            "asof_yesteryear": "N",
+                                            "asof_year_before_yesteryear": "N"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scp/{report_year}/csr_activity/{unique_id}": {
+            "get": {
+                "summary": "12.ข้อมูลผลการดำเนินงานด้านความยั่งยืนทางสังคม - CSR",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>social_performance_category</td>\n         <td><strong>ประเภทผลการดำเนินงานด้านสังคม</strong> <ul>\n          <li>07 = CSR Activities/li> \n          </ul> </td>\n     </tr>\n     <tr>\n         <td>social_performance_code</td>\n         <td>รหัสผลการดำเนินงานด้านสังคม</td>\n     </tr>\n    <tr>\n         <td>sequence</td>\n         <td>ลำดับ</td>\n     </tr>\n    </tbody>\n </table>\n<br>",
+                "operationId": "12-SocialPerformance-CSR_Activity",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:54.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "social_performance_category": "07",
+                                            "social_performance_code": 100,
+                                            "sequence": 4
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:54.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "social_performance_category": "07",
+                                            "social_performance_code": 102,
+                                            "sequence": 1
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sbo/{report_year}/rd/{unique_id}": {
+            "get": {
+                "summary": "02.ข้อมูลการวิจัยและพัฒนา (R&D)",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>last_upd_date</td>\n      <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>report_year</td>\n      <td>ปี</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>\n      <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n      <td>research_policy</td>\n      <td>\n        <strong>นโยบายในการทำวิจัยและพัฒนา</strong>\n        <ul>\n          <li>Y = Yes</li>\n          <li>N = No</li>\n        </ul>\n      </td>\n    </tr>\n    <tr>\n      <td>cost_asof_year</td>\n      <td>ค่าใช้จ่ายการทำวิจัยและพัฒนา ณ ปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>cost_asof_yesteryear</td>\n      <td>ค่าใช้จ่ายการทำวิจัยและพัฒนา ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>cost_asof_year_before_yesteryear</td>\n      <td>ค่าใช้จ่ายการทำวิจัยและพัฒนา 2 ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "02-SBO-RD",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:52.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "research_policy": "N",
+                                            "cost_asof_year": 0,
+                                            "cost_asof_yesteryear": 0,
+                                            "cost_asof_year_before_yesteryear": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sbo/{report_year}/export_income/{unique_id}": {
+            "get": {
+                "summary": "04.ข้อมูลโครงสร้างรายได้แบ่งตามรายได้จากต่างประเทศ",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>last_upd_date</td>\n      <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n    </tr>\n    <tr>\n      <td>report_year</td>\n      <td>ปี</td>\n    </tr>\n    <tr>\n      <td>unique_id</td>\n      <td>รหัสบริษัท</td>\n    </tr>\n    <tr>\n      <td>export_code</td>\n      <td>รหัสรายได้</td>\n    </tr>\n    <tr>\n      <td>sequence</td>\n      <td>ลำดับ</td>\n    </tr>\n    <tr>\n      <td>asof_year</td>\n      <td>มูลค่า ณ ปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_yesteryear</td>\n      <td>มูลค่า ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_year_before_yesteryear</td>\n      <td>มูลค่า 2 ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_year_percent</td>\n      <td>สัดส่วน (เปอร์เซ็นต์) ณ ปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_yesteryear_percent</td>\n      <td>สัดส่วน (เปอร์เซ็นต์) ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n    <tr>\n      <td>asof_year_before_yesteryear_percent</td>\n      <td>สัดส่วน (เปอร์เซ็นต์) 2 ปีก่อนหน้าปีที่รายงาน</td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "04-SBO-Export-Income",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-17T02:36:52.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "export_code": 220,
+                                            "sequence": 1,
+                                            "asof_year": 115785741,
+                                            "asof_yesteryear": 122247423,
+                                            "asof_year_before_yesteryear": 125657639,
+                                            "asof_year_percent": 100,
+                                            "asof_yesteryear_percent": 100,
+                                            "asof_year_before_yesteryear_percent": 100
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-17T02:36:52.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "export_code": 221,
+                                            "sequence": 2,
+                                            "asof_year": 0,
+                                            "asof_yesteryear": 0,
+                                            "asof_year_before_yesteryear": 0,
+                                            "asof_year_percent": 0,
+                                            "asof_yesteryear_percent": 0,
+                                            "asof_year_before_yesteryear_percent": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sustainability/{report_year}/environment_issue/{unique_id}": {
+            "get": {
+                "summary": "07.ข้อมูลด้านสิ่งแวดล้อม",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>environment_type</td>\n         <td><strong>ประเภทสิ่งแวดล้อม</strong> <ul> \n         <li>01 = Electricity Management</li> \n         <li>02 = Fuel Management</li>  \n         <li>03 = Water Management</li> \n         <li>04 = Waste Management</li>  \n         <li>05 = Greenhouse Gas Emission Management</li> \n         <li>06 = Renewable/Clean Energy Management</li>\n         <li>07 = Biodiversity Management</li> </ul> </td>\n     </tr>\n     <tr>\n         <td>environment_issue</td>\n         <td><strong>การบริหารจัดการ</strong> <ul> \n         <li>Y = มี</li> \n         <li>N = ไม่มี</li> </ul> </td>\n     </tr>\n   <tr>\n         <td>verify_ghgas</td>\n         <td><strong>การตรวจสอบการปล่อยก๊าซเรือนกระจก</strong> \n         <ul> \n          <li>Y = มี</li> \n          <li>N = ไม่มี</li> \n         </ul> </td>\n     </tr>\n <tr>\n         <td>verify_ghgas_label</td>\n         <td>ชื่อผู้ตรวจการรายงานก๊าซเรือนกระจก</td>\n     </tr>\n  <tr>\n         <td>asof_year</td>\n         <td>ปริมาณการใช้ ณ ปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>asof_yesteryear</td>\n         <td>ปริมาณการใช้ ปีก่อนหน้าปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>asof_year_before_yesteryear</td>\n         <td>ปริมาณการใช้ 2 ปีก่อนหน้าปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>environment_desc</td>\n         <td>ผลการดำเนินงานด้านสิ่งแวดล้อม</td>\n     </tr>\n  <tr>\n         <td>sequence</td>\n         <td>ลำดับ</td>\n     </tr>\n  <tr>\n         <td>choice</td>\n         <td><strong>มีข้อมูลการใช้และการปล่อยมลพิษ</strong> \n         <ul>\n          <li>Y = มี</li> \n          <li>N = ไม่มี</li> \n         </ul> </td>\n   </tr>\n   <tr>\n        <td>version</td>\n        <td>version ของไฟล์ One Report</td>\n    </tr>\n </tbody>\n </table>\n<br>",
+                "operationId": "07-Sustainability-Environment_issue",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:30.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "environment_type": "01",
+                                            "environment_issue": "Y",
+                                            "verify_ghgas": "N",
+                                            "verify_ghgas_label": null,
+                                            "asof_year": 92849777.31,
+                                            "asof_yesteryear": 103755002.4,
+                                            "asof_year_before_yesteryear": 103310040,
+                                            "environment_desc": "ปริมาณการซื้อไฟฟ้ามาใช้ (กิโลวัตต์ - ชั่วโมง)",
+                                            "sequence": 1,
+                                            "choice": "Y",
+                                            "version": "1.0"
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:30.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "environment_type": "02",
+                                            "environment_issue": "Y",
+                                            "verify_ghgas": "N",
+                                            "verify_ghgas_label": null,
+                                            "asof_year": 63229.44,
+                                            "asof_yesteryear": 0,
+                                            "asof_year_before_yesteryear": 0,
+                                            "environment_desc": "น้ำมันเชื้อเพลิง (ลิตร)",
+                                            "sequence": 1,
+                                            "choice": "Y",
+                                            "version": "1.0"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/fs/{report_year}/financial_statement/{unique_id}": {
+            "get": {
+                "summary": "16.งบการเงินและอัตราส่วนทางการเงิน",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n      <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n      </tr>\n      <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n      </tr>\n      <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n      </tr>\n      <tr>\n        <td>account_form</td>\n        <td>\n            <strong>ประเภทธุรกิจของบริษัท</strong>\n            <ul>\n              <li>01 = Bank</li>\n              <li>02 = Other Financial Institutions</li>\n              <li>03 = Securities</li>\n              <li>04 = Insurance</li>\n              <li>05 = Fund</li>\n              <li>06 = General Commercial Business</li>\n            </ul>\n        </td>\n      </tr>\n      <tr>\n        <td>financial_statement</td>\n        <td>\n            <strong>งบการเงิน</strong>\n            <ul>\n              <li>01 = งบดุล Balance Sheet</li>\n              <li>02 = งบกำไรขาดทุน Income Statement</li>\n              <li>03 = Cash Flow</li>\n              <li>04 = อัตราส่วนทางการเงิน Financial Ratio</li>\n            </ul>\n        </td>\n      </tr>\n      <tr>\n          <td>unit</td>\n          <td>Unit in Baht of balance sheet, income statement and cash flow</td>\n      </tr>\n      <tr>\n          <td>set_code</td>\n          <td>รหัสบัญชี หรือรหัสอัตราส่วนทางการเงิน</td>\n      </tr>\n      <tr>\n          <td>sequence</td>\n          <td>ลำดับ</td>\n      </tr>\n      <tr>\n          <td>indent</td>\n          <td>ลำดับการแสดงผล</td>\n      </tr>\n      <tr>\n          <td>asof_year</td>\n          <td>มูลค่าหรือสัดส่วน ณ ปีที่รายงาน</td>\n      </tr>\n      <tr>\n          <td>asof_yesteryear</td>\n          <td>มูลค่าหรือสัดส่วน ณ ปีก่อนหน้าปีที่รายงาน</td>\n      </tr>\n      <tr>\n          <td>asof_year_before_yesteryear</td>\n          <td>มูลค่าหรือสัดส่วน ณ 2 ปีก่อนหน้าปีที่รายงาน</td>\n      </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "16-CGP-FinancialStatement",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:26.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "account_form": "01",
+                                            "financial_statement": "01",
+                                            "unit": 1000,
+                                            "set_code": "300000",
+                                            "sequence": 70,
+                                            "indent": 0,
+                                            "asof_year": 0,
+                                            "asof_yesteryear": 0,
+                                            "asof_year_before_yesteryear": 0
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:50:26.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "account_form": "01",
+                                            "financial_statement": "01",
+                                            "unit": 1000,
+                                            "set_code": "309998",
+                                            "sequence": 108,
+                                            "indent": 1,
+                                            "asof_year": 374111440,
+                                            "asof_yesteryear": 355063594,
+                                            "asof_year_before_yesteryear": 348326386
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/employee/{unique_id}": {
+            "get": {
+                "summary": "18.ข้อมูลเกี่ยวกับพนักงาน",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n<table style=\"width:100%\">\n  <thead>\n    <tr>\n      <th>ชื่อ Field</th>\n      <th>รายละเอียด</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n        <td>last_upd_date</td>\n        <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n      </tr>\n      <tr>\n        <td>report_year</td>\n        <td>ปี</td>\n      </tr>\n      <tr>\n        <td>unique_id</td>\n        <td>รหัสบริษัท</td>\n      </tr>\n    <tr>\n        <td>total</td>\n        <td>จำนวนพนักงานทั้งหมด</td>\n    </tr>\n    <tr>\n        <td>total_male</td>\n        <td>จำนวนพนักงานชาย</td>\n    </tr>\n    <tr>\n        <td>total_female</td>\n        <td>จำนวนพนักงานหญิง</td>\n    </tr>\n    <tr>\n        <td>total_remuneration</td>\n        <td>จำนวนค่าตอบแทนรวมของพนักงาน</td>\n    </tr>\n    <tr>\n        <td>number_pvd</td>\n        <td>จำนวนพนักงานที่เข้าร่วม PVD</td>\n    </tr>\n    <tr>\n        <td>percent_pvd</td>\n        <td>สัดส่วน (เปอร์เซ็นต์) พนักงานเข้าร่วม PVD<td>\n    </tr>\n  </tbody>\n</table>\n<br>",
+                "operationId": "18-CGS-Employee",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-17T02:36:35.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "total": 18937,
+                                            "total_male": 5545,
+                                            "total_female": 13392,
+                                            "total_remuneration": 21851000000,
+                                            "number_pvd": 18369,
+                                            "percent_pvd": 97
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scp/{report_year}/employee_info/{unique_id}": {
+            "get": {
+                "summary": "09.ข้อมูลผลการดำเนินงานด้านความยั่งยืนทางสังคม - พนักงานและค่าตอบแทน",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>social_performance_category</td>\n         <td><strong>ประเภทผลการดำเนินงานด้านสังคม</strong> <ul>\n          <li>01 = Employee Info/li> \n          <li>02 = Employee Remuneration</li> \n          </ul> </td>\n     </tr>\n     <tr>\n         <td>social_performance_code </td>\n         <td>รหัสผลการดำเนินงานด้านสังคม</td>\n     </tr>\n  <tr>\n         <td>sequence</td>\n         <td>ลำดับ</td>\n     </tr>\n <tr>\n         <td>asof_year</td>\n         <td>ณ ปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>asof_yesteryear</td>\n         <td>ปีก่อนหน้าปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>asof_year_before_yesteryear</td>\n         <td>2 ปีก่อนหน้าปีที่รายงาน</td>\n     </tr>\n    </tbody>\n </table>\n<br>",
+                "operationId": "09-SocialPerformance-Employee_info",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:42.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "social_performance_category": "01",
+                                            "social_performance_code": 88,
+                                            "sequence": 1,
+                                            "asof_year": 5545,
+                                            "asof_yesteryear": 6024,
+                                            "asof_year_before_yesteryear": 6379
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:42.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "social_performance_category": "01",
+                                            "social_performance_code": 89,
+                                            "sequence": 2,
+                                            "asof_year": 13392,
+                                            "asof_yesteryear": 14238,
+                                            "asof_year_before_yesteryear": 14754
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scp/{report_year}/employee_development/{unique_id}": {
+            "get": {
+                "summary": "10.ข้อมูลผลการดำเนินงานด้านความยั่งยืนทางสังคม - การฝึกอบรมและความปลอดภัย",
+                "description": "<br>\n<h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n   <thead>\n     <tr>\n       <th>ชื่อ Field</th>\n       <th>รายละเอียด</th>\n     </tr>\n   </thead>\n   <tbody>\n     <tr>\n         <td>last_upd_date</td>\n         <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n     </tr>\n     <tr>\n         <td>report_year</td>\n         <td>ปี</td>\n     </tr>\n     <tr>\n         <td>unique_id</td>\n         <td>รหัสบริษัท</td>\n     </tr>\n     <tr>\n         <td>social_performance_category</td>\n         <td><strong>ประเภทผลการดำเนินงานด้านสังคม</strong> <ul>\n          <li>03 = Employee Training/li> \n          <li>04 = Employee Safety</li> \n          <li>05 = Employee Relationship</li> \n          </ul> </td>\n     </tr>\n     <tr>\n         <td>social_performance_code</td>\n         <td>รหัสผลการดำเนินงานด้านสังคม</td>\n     </tr>\n  <tr>\n         <td>sequence</td>\n         <td>ลำดับ</td>\n     </tr>\n     <tr>\n         <td>choice</td>\n         <td><strong>ข้อมูลการปล่อยมลพิษ (Consumption / Emission Information)</strong> <ul>\n          <li>Y = มี/li> \n          <li>N = ไม่มี</li> \n          </ul> </td>\n     </tr>\n <tr>\n         <td>asof_year</td>\n         <td>ณ ปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>asof_yesteryear</td>\n         <td>ปีก่อนหน้าปีที่รายงาน</td>\n     </tr>\n  <tr>\n         <td>asof_year_before_yesteryear</td>\n         <td>2 ปีก่อนหน้าปีที่รายงาน</td>\n     </tr>\n    </tbody>\n </table>\n<br>",
+                "operationId": "10-SocialPerformance-Employee_development",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2021
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัทหลักทรัพย์",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:47.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "social_performance_category": "03",
+                                            "social_performance_code": 96,
+                                            "sequence": 1,
+                                            "choice": "Y",
+                                            "asof_year": 105.45,
+                                            "asof_yesteryear": 109.81,
+                                            "asof_year_before_yesteryear": 73.29
+                                        },
+                                        {
+                                            "last_upd_date": "2023-10-26T04:51:47.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "social_performance_category": "03",
+                                            "social_performance_code": 97,
+                                            "sequence": 2,
+                                            "choice": "N",
+                                            "asof_year": 0,
+                                            "asof_yesteryear": 0,
+                                            "asof_year_before_yesteryear": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/bods/{unique_id}": {
+            "get": {
+                "summary": "21.ข้อมูลคณะกรรมการ (Board of directors)",
+                "description": "<br>\n <h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n <thead>\n <tr>\n <th>ชื่อ Field</th>\n <th>รายละเอียด</th>\n </tr>\n </thead>\n <tbody>\n <tr>\n <td>last_upd_date</td>\n <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n </tr>\n <tr>\n <td>report_year</td>\n <td>ปี</td>\n </tr>\n <tr>\n <td>unique_id</td>\n <td>รหัสบริษัท</td>\n </tr>\n <tr>\n  <td>sequence</td>\n  <td>ลำดับ</td>\n </tr>\n <tr>\n  <td>firstname</td>\n  <td>ชื่อจริง</td>\n </tr>\n <tr>\n  <td>lastname</td>\n  <td>นามสกุล</td>\n </tr>\n <tr>\n  <td>gender</td>\n  <td>\n    <strong>เพศ</strong>\n    <ul>\n      <li>M = ชาย</li>\n      <li>F = หญิง</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>thai_nationality</td>\n  <td>\n    <strong>กรรมการถือสัญชาติไทยหรือไม่</strong>\n    <ul>\n      <li>Y = ใช่</li>\n      <li>N = ไม่ใช่</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>bods_expertise</td>\n  <td>ความเชี่ยวชาญ</td>\n </tr>\n <tr>\n  <td>position</td>\n  <td>ตำแหน่งของคณะกรรมการ</td>\n </tr>\n <tr>\n  <td>start_date</td>\n  <td>วันที่ได้รับการแต่งตั้งเป็นกรรมการ</td>\n </tr>\n <tr>\n  <td>end_date</td>\n  <td>วันที่สิ้นสุดการดำรงตำแหน่ง</td>\n </tr>\n <tr>\n  <td>director_type_description</td>\n  <td>คำอธิบายประเภทของกรรมการ</td>\n </tr>\n <tr>\n  <td>bods_status</td>\n  <td>\n    <strong>สถานะของการเป็นคณะกรรมการในปีที่รายงาน</strong>\n    <ul>\n      <li>Y = กรรมการในปัจจุบัน (bods)</li>\n      <li>N = กรรมการที่เกษียณอายุแล้ว หรือ ลาออก (retiredBods)</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>independent</td>\n  <td>\n    <strong>เป็นกรรมการอิสระหรือไม่</strong>\n    <ul>\n      <li>Y = เป็นคณะกรรมการอิสระ</li>\n      <li>N = ไม่เป็นคณะกรรมการอิสระ</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>audit_committees_role</td>\n  <td>\n    <strong>เป็นกรรมการที่อยู่ในคณะกรรมการตรวจสอบ (Audit committees) ด้วยหรือไม่</strong>\n    <ul>\n      <li>Y = เป็นกรรมการที่อยู่ในคณะกรรมการตรวจสอบ (Audit Committees)</li>\n      <li>N = ไม่เป็นกรรมการที่อยู่ในคณะกรรมการตรวจสอบ (Non-audit Committees)</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>sub_committees_role</td>\n  <td>\n    <strong>เป็นกรรมการที่อยู่ในอนุกรรมการ (Sub committees) ด้วยหรือไม่</strong>\n    <ul>\n      <li>Y = เป็นกรรมการที่อยู่ในอนุกรรมการ (Sub committees)</li>\n      <li>N = ไม่เป็นกรรมการที่อยู่ในอนุกรรมการ (Non-sub committees)</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>board_status</td>\n  <td>\n    <strong>เป็นกรรมการที่มีตำแหน่งบริหารหรือไม่</strong>\n    <ul>\n      <li>Y = มีตำแหน่งบริหาร</li>\n      <li>N = ไม่มีตำแหน่งบริหาร</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>exec_role</td>\n  <td>\n    <strong>เป็นกรรมการที่มีตำแหน่งเป็นผู้บริหารระดับสูง หรือ ผู้บริหาร 4 อันดับแรกถัดจากผู้บริหารระดับสูงหรือไม่</strong>\n    <ul>\n      <li>Y = เป็นกรรมการที่เป็นผู้บริหารระดับสูง หรือ อยู่ใน 4 อันดับแรกถัดจากผู้บริหารระดับสูง</li>\n      <li>N = ไม่ใช่กรรมการที่เป็นผู้บริหารระดับสูง หรือ อยู่ใน 4 อันดับแรกถัดจากผู้บริหารระดับสูง</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>exec_committees_role</td>\n  <td>\n    <strong>เป็นกรรมการที่อยู่ในคณะกรรมการบริหาร (Executive committees) ด้วยหรือไม่</strong>\n    <ul>\n      <li>Y = เป็นกรรมการที่อยู่ในคณะกรรมการบริหาร (Executive committees)</li>\n      <li>N = ไม่เป็นกรรมการที่อยู่ในคณะกรรมการบริหาร (Non-executive committees)</li>\n    </ul>\n  </td>\n </tr>\n </tbody>\n </table>\n <br>",
+                "operationId": "21-CGS-Bods",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2022
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2567-04-23T03:09:25.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000013",
+                                            "sequence": 1,
+                                            "first_name": "กฤษฎา",
+                                            "last_name": "จีนะวิจารณะ",
+                                            "gender": "M",
+                                            "thai_nationality": "Y",
+                                            "bods_expertise": "กฎหมาย, การตลาด, เศรษฐศาสตร์",
+                                            "position": "ประธานกรรมการ",
+                                            "start_date": "2563-02-07",
+                                            "end_date": null,
+                                            "director_type_description": "กรรมการเดิม",
+                                            "bods_status": "Y",
+                                            "independent": "N",
+                                            "audit_committees_role": "N",
+                                            "sub_committees_role": "N",
+                                            "board_status": "N",
+                                            "exec_role": "N",
+                                            "exec_committees_role": "N"
+                                        },
+                                        {
+                                            "last_upd_date": "2567-04-23T03:09:25.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000013",
+                                            "sequence": 1,
+                                            "first_name": "นิธิมา",
+                                            "last_name": "เทพวนังกูร",
+                                            "gender": "F",
+                                            "thai_nationality": "Y",
+                                            "bods_expertise": "การเงิน, บัญชี, พาณิชย์",
+                                            "position": "กรรมการ",
+                                            "start_date": "2562-04-12",
+                                            "end_date": "2565-09-28",
+                                            "director_type_description": null,
+                                            "bods_status": "N",
+                                            "independent": "Y",
+                                            "audit_committees_role": "Y",
+                                            "sub_committees_role": "N",
+                                            "board_status": "N",
+                                            "exec_role": "N",
+                                            "exec_committees_role": "N"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/executives/{unique_id}": {
+            "get": {
+                "summary": "22.ข้อมูลผู้บริหาร",
+                "description": "<br>\n <h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n <thead>\n <tr>\n <th>ชื่อ Field</th>\n <th>รายละเอียด</th>\n </tr>\n </thead>\n <tbody>\n <tr>\n <td>last_upd_date</td>\n <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n </tr>\n <tr>\n <td>report_year</td>\n <td>ปี</td>\n </tr>\n <tr>\n <td>unique_id</td>\n <td>รหัสบริษัท</td>\n </tr>\n<tr>\n <td>sequence</td>\n <td>ลำดับ</td>\n</tr>\n <tr>\n <td>firstname</td>\n <td>ชื่อจริง</td>\n </tr>\n <tr>\n <td>lastname</td>\n <td>นามสกุล</td>\n </tr>\n <tr>\n <td>gender</td>\n <td>\n <strong>เพศ</strong>\n <ul>\n <li>M = ชาย</li>\n <li>F = หญิง</li>\n </ul>\n </td>\n </tr>\n <tr>\n <td>exec_expertise</td>\n <td>ความเชี่ยวชาญ</td>\n </tr>\n <tr>\n <td>position</td>\n <td>ตำแหน่งผู้บริหาร</td>\n </tr>\n <tr>\n <td>start_date</td>\n <td>วันที่ได้รับการแต่งตั้งเป็นผู้บริหาร</td>\n </tr>\n <tr>\n <td>exec_status</td>\n <td> <strong>สถานะของผู้บริหาร</strong>\n <ul>\n <li>Y = ผู้บริหารในปัจจุบัน (executive)</li>\n <li>N = ผู้บริหารที่เกษียณแล้ว (retiredExecutive)</li>\n </ul>\n </td> </tr>\n <tr>\n <td>highest_account_finance</td>\n <td> <strong>มีความรับผิดชอบสูงสุดในด้านบัญชีและการเงิน</strong>\n <ul>\n <li>Y = Yes</li>\n <li>N = No</li>\n </ul>\n </td> </tr>\n <tr>\n <td>directly_account</td>\n <td> <strong>รับผิดชอบโดยตรงในการควบคุมดูแลบัญชี</strong>\n <ul>\n <li>Y = Yes</li>\n <li>N = No</li>\n </ul>\n </td> </tr>\n </tbody>\n </table>\n <br>",
+                "operationId": "22-CGS-Executives",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2022
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2024-04-19T04:28:01.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "sequence": 17,
+                                            "firstname": "กฤษณ์",
+                                            "lastname": "ฉมาภิสิษฐ",
+                                            "gender": "M",
+                                            "exec_expertise": "การจัดการแบรนด์, การตลาด, ความรับผิดชอบต่อสังคม, ธนาคาร",
+                                            "position": "ผู้ช่วยกรรมการผู้จัดการใหญ่อาวุโส ผู้บริหารสายงาน",
+                                            "start_date": "2020-10-01T12:00:00.0000000+00:00",
+                                            "exec_status": "Y",
+                                            "highest_account_finance": "Y",
+                                            "directly_account": "Y"
+                                        },
+                                        {
+                                            "last_upd_date": "2024-04-19T04:28:01.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "sequence": 12,
+                                            "firstname": "กิตติพัฒน์",
+                                            "lastname": "เพียรธรรม",
+                                            "gender": "M",
+                                            "exec_expertise": "การเงิน, การตลาด, ธนาคาร",
+                                            "position": "ผู้ช่วยกรรมการผู้จัดการใหญ่อาวุโส ผู้บริหารสายงาน ",
+                                            "start_date": "2018-10-09T12:00:00.0000000+00:00",
+                                            "exec_status": "Y",
+                                            "highest_account_finance": "Y",
+                                            "directly_account": "Y"
+                                        },
+                                        {
+                                            "last_upd_date": "2024-04-19T04:28:01.0000000+00:00",
+                                            "report_year": "2021",
+                                            "unique_id": "C0000000013",
+                                            "sequence": 15,
+                                            "firstname": "เฉลิม",
+                                            "lastname": "ประดิษฐอาชีพ",
+                                            "gender": "M",
+                                            "exec_expertise": "การเงิน, ธนาคาร",
+                                            "position": "ผู้ช่วยกรรมการผู้จัดการใหญ่อาวุโส ผู้บริหารสายงาน",
+                                            "start_date": "2020-10-01T12:00:00.0000000+00:00",
+                                            "exec_status": "Y",
+                                            "highest_account_finance": "Y",
+                                            "directly_account": "Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cgs/{report_year}/committees/{unique_id}/others": {
+            "get": {
+                "summary": "23.ข้อมูลคณะกรรมการอื่น ๆ ของบริษัท",
+                "description": "<br>\n <h4>Data Dictionary</h4>\n <table style=\"width:100%\">\n <thead>\n <tr>\n <th>ชื่อ Field</th>\n <th>รายละเอียด</th>\n </tr>\n </thead>\n <tbody>\n <tr>\n <td>last_upd_date</td>\n <td>วันที่แก้ไขข้อมูลล่าสุด</td>\n </tr>\n <tr>\n <td>report_year</td>\n <td>ปี</td>\n </tr>\n <tr>\n <td>unique_id</td>\n <td>รหัสบริษัท</td>\n </tr>\n <tr>\n <td>firstname</td>\n <td>ชื่อจริง</td>\n </tr>\n <tr>\n <td>lastname</td>\n <td>นามสกุล</td>\n </tr>\n <tr>\n <td>gender</td>\n <td>\n <strong>เพศ</strong>\n <ul>\n <li>M = ชาย</li>\n <li>F = หญิง</li>\n </ul>\n </td>\n </tr>\n <tr>\n  <td>exec_committees_flag</td>\n  <td>\n    <strong>อยู่ในคณะกรรมการบริหารหรือไม่</strong>\n    <ul>\n      <li>Y = ใช่</li>\n      <li>N = ไม่ใช่</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>exec_committees_position</td>\n  <td>ตำแหน่งในคณะกรรมการบริหาร</td>\n </tr>\n <tr>\n  <td>sub_committees_flag</td>\n  <td>\n    <strong>อยู่ในคณะอนุกรรมการหรือไม่</strong>\n    <ul>\n      <li>Y = ใช่</li>\n      <li>N = ไม่ใช่</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>sub_committees_name</td>\n  <td>ชื่อคณะอนุกรรมการ</td>\n </tr>\n <tr>\n  <td>sub_committees_position</td>\n  <td>ตำแหน่งในคณะอนุกรรมการ</td>\n </tr>\n <tr>\n  <td>audit_committees_flag</td>\n  <td>\n    <strong>อยู่ในคณะกรรมการตรวจสอบหรือไม่</strong>\n    <ul>\n      <li>Y = ใช่</li>\n      <li>N = ไม่ใช่</li>\n    </ul>\n  </td>\n </tr>\n <tr>\n  <td>audit_committees_position</td>\n  <td>ตำแหน่งในคณะกรรมการตรวจสอบ</td>\n </tr>\n </tbody>\n </table>\n <br>",
+                "operationId": "23-CGS-Committees-Others",
+                "parameters": [
+                    {
+                        "name": "report_year",
+                        "in": "path",
+                        "description": "ปี",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": 2022
+                    },
+                    {
+                        "name": "unique_id",
+                        "in": "path",
+                        "description": "รหัสบริษัท",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "C0000000013"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "application/json": [
+                                        {
+                                            "last_upd_date": "2567-04-23T03:09:33.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000013",
+                                            "firstname": "ไกรฤทธิ์",
+                                            "lastname": "อุชุกานนท์ชัย",
+                                            "gender": "M",
+                                            "exec_committees_flag": "Y",
+                                            "exec_committees_position": "ประธานกรรมการบริหาร",
+                                            "sub_committees_flag": "Y",
+                                            "sub_committees_name": "คณะกรรมการกำกับดูแลความเสี่ยง",
+                                            "sub_committees_position": "ประธานกรรมการ",
+                                            "audit_committees_flag": "Y",
+                                            "audit_committees_position": "ประธานกรรมการบริหาร"
+                                        },
+                                        {
+                                            "last_upd_date": "2567-04-23T03:09:33.0000000+00:00",
+                                            "report_year": "2022",
+                                            "unique_id": "C0000000013",
+                                            "firstname": "จิราพร",
+                                            "lastname": "ขาวสวัสดิ์",
+                                            "gender": "F",
+                                            "exec_committees_flag": "N",
+                                            "exec_committees_position": null,
+                                            "sub_committees_flag": "Y",
+                                            "sub_committees_name": "คณะกรรมการบรรษัทภิบาลและความรับผิดชอบต่อสังคม,คณะกรรมการอิสระ",
+                                            "sub_committees_position": "กรรมการ,กรรมการ",
+                                            "audit_committees_flag": "N",
+                                            "audit_committees_position": null
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}

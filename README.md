@@ -103,6 +103,16 @@ client, err := sec.NewClient(
 
 ## Supported Endpoints
 
+Currently implemented: **82 endpoints** (complete coverage)
+
+📋 **Full API catalog:** See [`docs/v2-schemas/API-DISCOVERY.md`](docs/v2-schemas/API-DISCOVERY.md) for all endpoints across 6 categories:
+- Fund (กองทุน) — 21 endpoints ✅ Implemented
+- Bond (ตราสารหนี้) — 6 endpoints ✅ Implemented
+- PVD (Provident Fund / กองทุนสำรองเลี้ยงชีพ) — 15 endpoints ✅ Implemented
+- License Check — 16 endpoints ✅ Implemented
+- One Report — 23 endpoints ✅ Implemented
+- Digital Asset (สินทรัพย์ดิจิทัล) — 1 endpoint ✅ Implemented
+
 ### General Info
 - `ListAMCs` — `/v2/fund/general-info/amcs`
 - `GetFundProfiles` — `/v2/fund/general-info/profiles`
@@ -131,6 +141,49 @@ client, err := sec.NewClient(
 ### Outstanding
 - `GetQuarterlyPortfolio` — `/v2/fund/outstanding/portfolio`
 - `GetMonthlyPortfolioAssetType` — `/v2/fund/outstanding/portfolio-asset-type`
+
+### Bond (ตราสารหนี้)
+- `ListBondIssuers` — `/v2/bond/general-info/amcs`
+- `GetBondFeatures` — `/v2/bond/general-info/features`
+- `GetBondCreditRatings` — `/v2/bond/credit-rating`
+- `GetBondOutstanding` — `/v2/bond/outstanding`
+- `GetBondRelatedParties` — `/v2/bond/related-party`
+- `GetBondInvestorHoldings` — `/v2/bond/investor-holding`
+
+### PVD (Provident Fund / กองทุนสำรองเลี้ยงชีพ)
+- `ListPVDs` — `/v1/pvd/general-info/list`
+- `GetPVDFundInfo` — `/v1/pvd/general-info/fund-info`
+- `GetPVDFundSpecs` — `/v1/pvd/general-info/fund-spec`
+- `GetPVDFundMembers` — `/v1/pvd/fund-member`
+- `GetPVDFundAssets` — `/v1/pvd/fund-asset`
+- `GetPVDFundTransactions` — `/v1/pvd/fund-transaction`
+- `GetPVDFundContributions` — `/v1/pvd/fund-contribution`
+- `GetPVDFundExpenses` — `/v1/pvd/fund-expense`
+- `GetPVDFundLiquidity` — `/v1/pvd/fund-liquidity`
+- `GetPVDFundPerformance` — `/v1/pvd/fund-performance`
+- `GetPVDFundBenchmarks` — `/v1/pvd/fund-benchmark`
+- `GetPVDFundDividends` — `/v1/pvd/fund-dividend`
+- `GetPVDFundPolicies` — `/v1/pvd/fund-policy`
+- `GetPVDFundFees` — `/v1/pvd/fund-fee`
+- `GetPVDFundCompliance` — `/v1/pvd/fund-compliance`
+
+### License Check
+- `CheckBondSaleReps` — `/v1/license-check/bond-sale-rep`
+- `CheckSecuritiesCompanies` — `/v1/license-check/securities-company`
+- `CheckDerivativesCompanies` — `/v1/license-check/derivatives-company`
+- `CheckSecuritiesBrokers` — `/v1/license-check/securities-broker`
+- `CheckDerivativesBrokers` — `/v1/license-check/derivatives-broker`
+- `CheckInvestmentAdvisors` — `/v1/license-check/investment-advisor`
+- `CheckSecuritiesFundManagers` — `/v1/license-check/securities-fund-manager`
+- `CheckFundSupervisors` — `/v1/license-check/fund-supervisor`
+- `CheckAuditors` — `/v1/license-check/auditor`
+- `CheckCreditRatingCompanies` — `/v1/license-check/credit-rating-company`
+- `CheckPrivateFunds` — `/v1/license-check/private-fund`
+- `CheckDerivativesFundManagers` — `/v1/license-check/derivatives-fund-manager`
+- `CheckSecuritiesBorrowingLending` — `/v1/license-check/securities-borrowing-lending`
+- `CheckFinancialAdvisors` — `/v1/license-check/financial-advisor`
+- `CheckAcquirers` — `/v1/license-check/acquirer`
+- `CheckVentureCapitals` — `/v1/license-check/venture-capital`
 
 All endpoints return paginated results: `([]T, nextCursor, error)`. Use `FetchAllPages` to automatically traverse cursors.
 
@@ -315,6 +368,9 @@ sec-go/
 ├── rate.go                # Rate limiter
 ├── retry.go               # Retry logic
 ├── fund_service.go        # Fund API service methods (all 21 endpoints)
+├── bond_service.go        # Bond API service methods (6 endpoints)
+├── pvd_service.go         # PVD API service methods (15 endpoints)
+├── license_check_service.go # License Check API service methods (16 endpoints)
 ├── models.go              # V2 response models (includes flexible DateTime parsing)
 ├── pagination.go          # Pagination helpers
 ├── batch.go               # Batch/concurrent operations
@@ -324,7 +380,10 @@ sec-go/
 ├── dates.go               # Buddhist date conversion + Thai period translation
 ├── helpers_fund.go        # Convenience helpers: SearchFunds, GetFundsByCompany, etc.
 ├── client_test.go         # Client unit tests
-├── fund_service_test.go   # Service method tests
+├── fund_service_test.go   # Fund service tests
+├── bond_service_test.go   # Bond service tests
+├── pvd_service_test.go    # PVD service tests
+├── license_check_service_test.go # License Check service tests
 ├── pagination_test.go     # Pagination tests
 ├── batch_test.go          # Batch operation tests
 ├── language_test.go       # Language/translation tests

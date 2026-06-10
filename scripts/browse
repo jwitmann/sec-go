@@ -1,0 +1,54 @@
+#!/bin/bash
+# browse — fetch any webpage using a real browser to bypass bot protection
+# Works for sites with WAF/Cloudflare/bot detection that block curl/wget
+# Now with SPA hydration support via extended wait
+#
+# Usage: browse <URL>
+# Example: browse "https://secopendata.sec.or.th/sec-open-apis?user=developer&type=fund&id=getAmcList"
+
+set -e
+
+URL="$1"
+[ -z "$URL" ] && { echo "Usage: browse <URL>"; exit 1; }
+
+# Ensure URL has protocol
+[[ "$URL" =~ ^https?:// ]] || URL="https://$URL"
+
+TMPFILE=$(mktemp /tmp/browse-XXXXXX.js)
+trap "rm -f $TMPFILE" EXIT
+
+# JavaScript to wait for SPA content to hydrate
+cat > "$TMPFILE" <<'EOF'
+const waitForContent = async () => {
+  // Wait for the content area to have actual API docs (not just "Coming soon")
+  for (let i = 0; i < 60; i++) {
+    const content = document.querySelector('#content-area');
+    if (content) {
+      const text = content.innerText || '';
+      // Check if we have actual API content (endpoint, parameters, response)
+      if (text.includes('Endpoint') && (text.includes('Parameters') || text.includes('Response') || text.includes('Headers'))) {
+        return true;
+      }
+      // Also check for code examples or curl commands
+      if (document.querySelector('pre') || document.querySelector('code')) {
+        return true;
+      }
+    }
+    await new Promise(r => setTimeout(r, 1000));
+  }
+  return false;
+};
+
+waitForContent().then(() => {
+  console.log('CONTENT_LOADED');
+});
+EOF
+
+# Chromium with anti-bot bypass flags + extended timeout for SPA
+chromium --headless --disable-gpu --no-sandbox \
+  --disable-blink-features=AutomationControlled \
+  --disable-features=IsolateOrigins,site-per-process \
+  --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+  --virtual-time-budget=60000 \
+  --run-all-compositor-stages-before-draw \
+  --dump-dom "$URL" 2>/dev/null

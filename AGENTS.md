@@ -46,6 +46,36 @@ The following tools are installed in `~/go/bin/` and require `export PATH="$HOME
 | `gotests` | Test boilerplate generator | `gotests -all -w file.go` |
 | `richgo` | Colorized test output | `richgo test ./...` |
 
+## Browse Tool — Agent Reference
+
+### Overview
+
+The `scripts/browse` tool is a lightweight wrapper around Chromium that fetches webpage content while bypassing bot detection/WAF protection.
+
+### When to Use
+
+Use `browse` instead of `curl`/`wget` when:
+- Site returns "Access Denied" or "Blocked"
+- Site uses Cloudflare, Akamai, or similar WAF
+- Site is a Single Page Application (SPA) that requires JavaScript rendering
+- Standard HTTP tools return empty or bot challenge pages
+
+### Usage
+
+```bash
+# Basic usage
+browse "https://example.com"
+
+# Save to file
+browse "https://example.com" > output.html
+
+# Pipe to other tools
+browse "https://example.com" | grep "pattern"
+
+# For JSON APIs
+browse "https://api.example.com/data" | jq '.'
+```
+
 ## Code Conventions
 
 ### Go Style

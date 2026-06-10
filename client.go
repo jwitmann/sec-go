@@ -113,11 +113,14 @@ func (c *Client) Language() Language {
 }
 
 func (c *Client) do(ctx context.Context, method, path string, body io.Reader) (*http.Response, error) {
+	return c.doAbsolute(ctx, method, c.baseURL+path, body)
+}
+
+func (c *Client) doAbsolute(ctx context.Context, method, url string, body io.Reader) (*http.Response, error) {
 	if err := c.rateLimiter.Wait(ctx); err != nil {
 		return nil, fmt.Errorf("rate limiter: %w", err)
 	}
 
-	url := c.baseURL + path
 	req, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return nil, fmt.Errorf("create request: %w", err)
@@ -194,6 +197,44 @@ func (c *Client) post(ctx context.Context, path string, payload []byte) ([]byte,
 
 	if resp.StatusCode == http.StatusNoContent {
 		return nil, fmt.Errorf("%w: %s", ErrNotFound, path)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+
+	return data, nil
+}
+
+func (c *Client) getAbsolute(ctx context.Context, url string) ([]byte, error) {
+	resp, err := c.doAbsolute(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNoContent {
+		return nil, fmt.Errorf("%w: %s", ErrNotFound, url)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+
+	return data, nil
+}
+
+func (c *Client) postAbsolute(ctx context.Context, url string, payload []byte) ([]byte, error) {
+	resp, err := c.doAbsolute(ctx, http.MethodPost, url, bytes.NewReader(payload))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNoContent {
+		return nil, fmt.Errorf("%w: %s", ErrNotFound, url)
 	}
 
 	data, err := io.ReadAll(resp.Body)
