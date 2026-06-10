@@ -397,3 +397,35 @@ GET /v1/pvd/fund-compliance?page_size={page_size}&next_cursor={next_cursor}&proj
 | `compliance_status` | string | No | Compliance status |
 | `remark` | string | No | Remark |
 | `last_upd_date` | datetime | No | Last update timestamp |
+
+---
+
+## Convenience Helpers
+
+The Go client provides higher-level helpers for common PVD operations:
+
+### Fetch All Provident Funds
+
+Auto-paginates through all pages:
+
+```go
+pvds, err := client.FetchAllPVDs(ctx)
+```
+
+### Find Provident Fund
+
+Search by Thai name, English name, or unique ID:
+
+```go
+pvd, err := client.FindPVD(ctx, "กรุงศรี")
+// or
+pvd, err := client.FindPVD(ctx, "PVD123456")
+```
+
+### Fetch All PVD Fund Info
+
+Auto-paginates through all pages for a given project:
+
+```go
+fundInfos, err := client.FetchAllPVDFundInfo(ctx, sec.PVDProjOptions{ProjID: "PVD123456"})
+```

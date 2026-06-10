@@ -200,6 +200,28 @@ profiles, err := client.SearchFunds(ctx, "alpha")
 
 // Find an AMC by Thai/English name or unique ID
 amc, err := client.FindAMC(ctx, "กรุงศรี")
+
+// Find a bond issuer by Thai/English name or unique ID
+issuer, err := client.FindBondIssuer(ctx, "กรุงไทย")
+
+// Find a provident fund by Thai/English name or unique ID
+pvd, err := client.FindPVD(ctx, "กรุงศรี")
+```
+
+### Fetch All Pages
+
+```go
+// Fetch all bond issuers (auto-paginates)
+issuers, err := client.FetchAllBondIssuers(ctx)
+
+// Fetch all bond features for a project
+features, err := client.FetchAllBondFeatures(ctx, sec.BondFeatureOptions{ProjID: "B123456"})
+
+// Fetch all provident funds (auto-paginates)
+pvds, err := client.FetchAllPVDs(ctx)
+
+// Fetch all PVD fund info for a project
+fundInfos, err := client.FetchAllPVDFundInfo(ctx, sec.PVDProjOptions{ProjID: "PVD123"})
 ```
 
 ### Single-Fund Lookups
@@ -378,7 +400,9 @@ sec-go/
 ├── dictionaries.go        # Thai↔English translation maps
 ├── translate.go           # Struct-specific translation functions
 ├── dates.go               # Buddhist date conversion + Thai period translation
-├── helpers_fund.go        # Convenience helpers: SearchFunds, GetFundsByCompany, etc.
+├── helpers_fund.go        # Fund convenience helpers: SearchFunds, GetFundsByCompany, etc.
+├── helpers_bond.go        # Bond convenience helpers: FetchAllBondIssuers, FindBondIssuer, etc.
+├── helpers_pvd.go         # PVD convenience helpers: FetchAllPVDs, FindPVD, etc.
 ├── client_test.go         # Client unit tests
 ├── fund_service_test.go   # Fund service tests
 ├── bond_service_test.go   # Bond service tests

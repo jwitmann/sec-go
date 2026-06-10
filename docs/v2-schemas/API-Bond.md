@@ -184,3 +184,35 @@ GET /v2/bond/investor-holding?page_size={page_size}&next_cursor={next_cursor}&pr
 | `holding_val` | float | No | Holding value (THB) |
 | `holding_pct` | float | No | Holding percentage |
 | `last_upd_date` | date | No | Last update date |
+
+---
+
+## Convenience Helpers
+
+The Go client provides higher-level helpers for common Bond operations:
+
+### Fetch All Bond Issuers
+
+Auto-paginates through all pages:
+
+```go
+issuers, err := client.FetchAllBondIssuers(ctx)
+```
+
+### Find Bond Issuer
+
+Search by Thai name, English name, or unique ID:
+
+```go
+issuer, err := client.FindBondIssuer(ctx, "กรุงไทย")
+// or
+issuer, err := client.FindBondIssuer(ctx, "C0000000021")
+```
+
+### Fetch All Bond Features
+
+Auto-paginates through all pages for a given project:
+
+```go
+features, err := client.FetchAllBondFeatures(ctx, sec.BondFeatureOptions{ProjID: "B123456"})
+```
