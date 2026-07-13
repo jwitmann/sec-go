@@ -3,6 +3,7 @@ package sec
 import (
 	"context"
 	"net/url"
+	"strings"
 )
 
 func (c *Client) ListAMCs(ctx context.Context, pageSize int, cursor string) ([]AMC, string, error) {
@@ -33,7 +34,17 @@ func (c *Client) GetFundProfiles(ctx context.Context, opts ProfileOptions) ([]Fu
 	}
 
 	path := buildPath("/v2/fund/general-info/profiles", params)
-	return fetchPaginated[FundProfile](ctx, c, path, "get fund profiles")
+	profiles, cursor, err := fetchPaginated[FundProfile](ctx, c, path, "get fund profiles")
+	if err != nil {
+		return nil, "", err
+	}
+	// Canonicalize the fund abbreviation (the short-code-equivalent
+	// identifier) to uppercase so downstream consumers don't have to
+	// normalize it themselves.
+	for i := range profiles {
+		profiles[i].ProjAbbrName = strings.ToUpper(strings.TrimSpace(profiles[i].ProjAbbrName))
+	}
+	return profiles, cursor, nil
 }
 
 type ProfileOptions struct {
